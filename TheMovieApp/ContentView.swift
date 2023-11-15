@@ -10,6 +10,10 @@ import Foundation
 
 struct ContentView: View {
     
+    init(){
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
+    }
+    
     var movies: [Movie] = {
         let jsonMovieData = """
             {

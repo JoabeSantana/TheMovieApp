@@ -12,65 +12,77 @@ struct MovieDetail: View {
     let movie: Movie
     
     var body: some View {
-        VStack(alignment: .leading, content: {
-            
-            ZStack() {
-                ImageView(imageUrl: movie.backdrop_path, topLeadingRadius: 0, bottomLeadingRadius: 20, bottomTrailingRadius: 20, topTrailingRadius: 0, progressViewMaxWidth: .infinity, progressViewMaxHeight: 220)
+        ScrollView {
+            VStack(alignment: .leading, content: {
                 
-                HStack(alignment: .center) {
-                    
-                    Image(systemName: "star")
-                        .foregroundColor(.orange)
-                        .bold()
-                    Text("\(movie.vote_average, specifier: "%.2f")")
-                        .foregroundStyle(.orange)
-                        .bold()
+                BackdropImageView(imageUrl: movie.backdrop_path, topLeadingRadius: 0, bottomLeadingRadius: 20, bottomTrailingRadius: 20, topTrailingRadius: 0)
+                
+                HStack {
+                    Spacer()
+                    HStack(alignment: .center) {
+                        
+                        Image(systemName: "star")
+                            .foregroundColor(.orange)
+                            .bold()
+                        Text("\(movie.vote_average, specifier: "%.2f")")
+                            .foregroundStyle(.orange)
+                            .bold()
+                    }
+                    .frame(width: 90, height: 40)
+                    .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
+                    .clipShape(.capsule)
                 }
-                .frame(width: 90, height: 40)
-                .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
-                .clipShape(.capsule)
-                .offset(x: 130, y: 70)
+                .padding(EdgeInsets(top: 0, leading: 10, bottom: -60, trailing: 10))
+                .offset(x: 0, y: -60)
                 
                 HStack(alignment: .bottom) {
                     
-                    ImageView(imageUrl: movie.poster_path, topLeadingRadius: 15, bottomLeadingRadius: 15, bottomTrailingRadius: 15, topTrailingRadius: 15, progressViewMaxWidth: 100, progressViewMaxHeight: 150)
+                    PosterImageView(imageUrl: movie.poster_path, topLeadingRadius: 15, bottomLeadingRadius: 15, bottomTrailingRadius: 15, topTrailingRadius: 15)
                     VStack() {
                         Text(movie.title)
                             .font(.system(size: 24))
                             .bold()
                             .foregroundStyle(.white)
-                        .lineLimit(2)
+                            .lineLimit(2)
                     }
-                    .frame(maxWidth: 500, maxHeight: 75, alignment: .leading)
-                        
-                }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: 150, alignment: .bottomLeading)
-                    .offset(y: 120)
-                    .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
-            }.frame(height: 340,alignment: .top)
-            
-            HStack(alignment: .center){
-                Text("\(Image(systemName: "calendar")) 2021")
-                Text("|")
-                Text("\(Image(systemName: "clock")) 148 Minutes")
-                Text("|")
-                Text("\(Image(systemName: "ticket")) Action")
-            }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
-                .foregroundStyle(Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255))
-            VStack(alignment: .leading, spacing: 10){
-                Text("About Movie")
-                    .font(.title2)
-                    .bold()
-                    .foregroundStyle(.white)
-                Text("\(movie.overview)")
-                    .foregroundStyle(.white)
-            }.padding()
-        })
-        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .topLeading)
-        .navigationTitle("Detail")
-        .foregroundColor(.white)
-        .navigationBarTitleDisplayMode(.inline)
-        .background(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
-        
+                    .frame(maxWidth: .infinity, maxHeight: 75, alignment: .leading)
+                    
+                }
+                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: 150, alignment: .top)
+                .padding(EdgeInsets(top: 0, leading: 30, bottom: -95, trailing: 30))
+                .offset(x: 0, y: -95)
+                
+                
+                HStack(alignment: .center){
+                    Text("\(Image(systemName: "calendar")) 2021")
+                    Text("|")
+                    Text("\(Image(systemName: "clock")) 148 Minutes")
+                    Text("|")
+                    Text("\(Image(systemName: "ticket")) Action")
+                }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                    .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
+                    .foregroundStyle(Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255))
+                VStack(alignment: .leading, spacing: 10){
+                    Text("About Movie")
+                        .font(.title2)
+                        .bold()
+                        .foregroundStyle(.white)
+                    Text("\(movie.overview)")
+                        .foregroundStyle(.white)
+                }.padding()
+            })
+            .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .topLeading)
+            .navigationTitle("Detail")
+            .foregroundColor(.white)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing){
+                    Button("\(Image(systemName: "bookmark"))"){
+                        print("Ok")
+                    }
+                }
+            }
+        }.background(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
     }
 }
 
@@ -97,24 +109,60 @@ struct Aux: View {
     }
 }
 
-struct ImageView: View {
+struct BackdropImageView: View {
     
     let imageUrl: String
     let topLeadingRadius: CGFloat
     let bottomLeadingRadius: CGFloat
     let bottomTrailingRadius: CGFloat
     let topTrailingRadius: CGFloat
-    let progressViewMaxWidth: CGFloat
-    let progressViewMaxHeight: CGFloat
     
     var body: some View {
-        AsyncImage(url: URL(string: imageUrl)) { image in
-            image.resizable()
-                .aspectRatio(contentMode: .fit)
-                .clipShape(.rect(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius))
-        } placeholder: {
-            ProgressView()
-                .frame(maxWidth: progressViewMaxWidth, maxHeight: progressViewMaxHeight)
+        ZStack {
+            AsyncImage(url: URL(string: imageUrl)) { image in
+                image.resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(.rect(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius))
+            } placeholder: {
+                ZStack() {
+                    Image("BackdropTemplate")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255)))
+                }
+        }
+        }
+    }
+}
+
+struct PosterImageView: View {
+    
+    let imageUrl: String
+    let topLeadingRadius: CGFloat
+    let bottomLeadingRadius: CGFloat
+    let bottomTrailingRadius: CGFloat
+    let topTrailingRadius: CGFloat
+    
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                .stroke(lineWidth: 2)
+                .foregroundStyle(.orange)
+                .frame(maxWidth: 100)
+            AsyncImage(url: URL(string: imageUrl)) { image in
+                image.resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(.rect(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius))
+            } placeholder: {
+                ZStack() {
+                    Image("PosterTemplate")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255)))
+                }
+            }
         }
     }
 }

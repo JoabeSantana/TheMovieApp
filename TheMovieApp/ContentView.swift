@@ -476,10 +476,19 @@ struct MovieCard: View {
     var body: some View {
         AsyncImage(url: URL(string: movie.poster_path)) { image in
             image.resizable()
-                .aspectRatio(contentMode: /*@START_MENU_TOKEN@*/.fill/*@END_MENU_TOKEN@*/)
+                .aspectRatio(contentMode: .fit)
                 .cornerRadius(15)
         } placeholder: {
-            ProgressView()
+            ZStack(alignment: .center) {
+                RoundedRectangle(cornerRadius: 15, style: .circular)
+                    .stroke(lineWidth: /*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/)
+                    .foregroundStyle(Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255))
+                Image("PosterTemplate")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255)))
+            }
         }
     }
 }

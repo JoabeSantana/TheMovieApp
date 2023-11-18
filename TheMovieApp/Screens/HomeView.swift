@@ -465,14 +465,14 @@ struct MovieCard: View {
         AsyncImage(url: URL(string: movie.poster_path)) { image in
             image.resizable()
                 .aspectRatio(contentMode: .fit)
-                .clipShape(.rect(cornerRadius: 20))
+                .roundedCorners()
         } placeholder: {
             ZStack(alignment: .center) {
                 Image("PosterTemplate")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-                    .clipShape(.rect(cornerRadius: 20))
+                    .roundedCorners()
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255)))
             }

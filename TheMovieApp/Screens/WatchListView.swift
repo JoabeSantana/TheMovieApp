@@ -26,14 +26,14 @@ struct WatchListView: View {
                                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg")) { image in
                                     image.resizable()
                                         .aspectRatio(contentMode: .fit)
-                                        .clipShape(.rect(cornerRadius: 20))
+                                        .roundedCorners()
                                 } placeholder: {
                                    
                                         Image("PosterTemplate")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-                                            .clipShape(.rect(cornerRadius: 20))
+                                            .roundedCorners()
                                     
                                 }
                                 VStack(alignment: .leading){

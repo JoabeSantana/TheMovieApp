@@ -18,7 +18,7 @@ struct MovieDetailView: View {
         ScrollView {
             VStack(alignment: .leading, content: {
                 
-                BackdropImageView(imageUrl: movie.backdrop_path, topLeadingRadius: 0, bottomLeadingRadius: 20, bottomTrailingRadius: 20, topTrailingRadius: 0)
+                BackdropImageView(imageUrl: movie.backdrop_path)
                 
                 HStack {
                     Spacer()
@@ -65,8 +65,8 @@ struct MovieDetailView: View {
                 }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
                     .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
                     .foregroundStyle(Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255))
-                VStack(alignment: .leading, spacing: 10){
-                    HStack(alignment: .center){
+                VStack {
+                    HStack {
                         Button {
                             aboutMenu = true
                             reviewsMenu = false
@@ -84,7 +84,6 @@ struct MovieDetailView: View {
                                         .frame(maxHeight: 5)
                                         .foregroundStyle(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
                                 }
-                                
                             }
                         }
                         Spacer()
@@ -136,7 +135,7 @@ struct MovieDetailView: View {
                         Text("\(movie.overview)")
                             .foregroundStyle(.white)
                     } else if reviewsMenu {
-                        Text("\(movie.overview)")
+                        Text("Building...")
                             .foregroundStyle(.white)
                     } else {
                         Text("\(movie.overview)")
@@ -187,23 +186,19 @@ struct Aux: View {
 struct BackdropImageView: View {
     
     let imageUrl: String
-    let topLeadingRadius: CGFloat
-    let bottomLeadingRadius: CGFloat
-    let bottomTrailingRadius: CGFloat
-    let topTrailingRadius: CGFloat
     
     var body: some View {
         ZStack {
             AsyncImage(url: URL(string: imageUrl)) { image in
                 image.resizable()
                     .aspectRatio(contentMode: .fit)
-                    .clipShape(.rect(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius))
+                    .roundedCorners(topLeadingRadius: 0, topTrailingRadius: 0)
             } placeholder: {
                 Image("BackdropTemplate")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-                    .clipShape(.rect(cornerRadius: 20))
+                    .roundedCorners(topLeadingRadius: 0, topTrailingRadius: 0)
             }
         }
     }
@@ -222,13 +217,13 @@ struct PosterImageView: View {
             AsyncImage(url: URL(string: imageUrl)) { image in
                 image.resizable()
                     .aspectRatio(contentMode: .fit)
-                    .clipShape(.rect(cornerRadius: 20))
+                    .roundedCorners()
             } placeholder: {
                 Image("PosterTemplate")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-                    .clipShape(.rect(cornerRadius: 20))
+                    .roundedCorners()
             }
         }
     }

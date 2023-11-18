@@ -8,10 +8,15 @@
 import SwiftUI
 
 @main
-struct TheMovieAppApp: App {
+struct TheMovieApp: App {
+    
+    init(){
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainAppView()
         }
     }
 }

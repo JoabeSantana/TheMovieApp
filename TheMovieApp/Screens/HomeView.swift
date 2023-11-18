@@ -1,18 +1,14 @@
 //
-//  ContentView.swift
+//  HomeView.swift
 //  TheMovieApp
 //
-//  Created by Joabe Santana Correia on 08/11/23.
+//  Created by Joabe Santana Correia on 16/11/23.
 //
 
-import SwiftUI
 import Foundation
+import SwiftUI
 
-struct ContentView: View {
-    
-    init(){
-        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
-    }
+struct HomeView: View {
     
     var movies: [Movie] = {
         let jsonMovieData = """
@@ -443,30 +439,22 @@ struct ContentView: View {
     
     var body: some View {
         
-        VStack {
-            NavigationStack {
-                ScrollView {
-                    LazyVGrid(columns: colums, spacing: 16) {
-                        ForEach(movies, id: \.id) { movie in
-                            
-                            NavigationLink {
-                                MovieDetail(movie: movie)
-                            } label: {
-                                MovieCard(movie: movie)
-                            }
-                            
+        NavigationStack {
+            ScrollView {
+                LazyVGrid(columns: colums, spacing: 16) {
+                    ForEach(movies, id: \.id) { movie in
+                        NavigationLink {
+                            MovieDetailView(movie: movie)
+                        } label: {
+                            MovieCard(movie: movie)
                         }
-                    }.padding()
-                }.background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
-            }
+                    }
+                }.padding()
+            }.navigationTitle("Home")
+                .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
         }
+        
     }
-    
-    
-}
-
-#Preview {
-    ContentView()
 }
 
 struct MovieCard: View {
@@ -477,18 +465,21 @@ struct MovieCard: View {
         AsyncImage(url: URL(string: movie.poster_path)) { image in
             image.resizable()
                 .aspectRatio(contentMode: .fit)
-                .cornerRadius(15)
+                .clipShape(.rect(cornerRadius: 20))
         } placeholder: {
             ZStack(alignment: .center) {
-                RoundedRectangle(cornerRadius: 15, style: .circular)
-                    .stroke(lineWidth: /*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/)
-                    .foregroundStyle(Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255))
                 Image("PosterTemplate")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
+                    .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
+                    .clipShape(.rect(cornerRadius: 20))
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255)))
             }
         }
     }
+}
+
+#Preview {
+    HomeView()
 }

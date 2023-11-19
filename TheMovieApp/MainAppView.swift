@@ -27,8 +27,6 @@ struct MainAppView: View {
         }
         .colorScheme(.dark)
     }
-    
-    
 }
 
 #Preview {

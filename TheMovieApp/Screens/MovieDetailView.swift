@@ -146,9 +146,7 @@ struct MovieDetailView: View {
                 }.padding()
             })
             .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .topLeading)
-            .navigationTitle("Detail")
             .foregroundColor(.white)
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing){
                     Button("\(Image(systemName: "bookmark"))"){
@@ -156,30 +154,10 @@ struct MovieDetailView: View {
                     }
                 }
             }
-        }.background(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
-    }
-}
-
-#Preview {
-    MovieDetailView(movie: Movie(adult: false, backdrop_path: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg", id: 893723, original_language: "en", original_title: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, poster_path: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", release_date: Date(), title: "PAW Patrol: The Mighty Movie", video: false, vote_average: 6.928, vote_count: 125))
-    //PAW Patrol: The Mighty Movie
-    //Aux()
-}
-
-
-struct Aux: View {
-    var body: some View {
-        HStack(alignment: .bottom){
-            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg")) { image in
-                image.resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .clipShape(.rect(topLeadingRadius: 20, bottomLeadingRadius: 20, bottomTrailingRadius: 20, topTrailingRadius: 20))
-            } placeholder: {
-                ProgressView()
-                    .frame(maxWidth: .infinity, maxHeight: 220)
-            }
-            Text("PAW Patrol: The Mighty Movie")
-        }.frame(width: .infinity, height: 150)
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("Detail")
+        .background(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
     }
 }
 
@@ -226,5 +204,14 @@ struct PosterImageView: View {
                     .roundedCorners()
             }
         }
+    }
+}
+
+#Preview {
+    
+    NavigationStack {
+        MovieDetailView(movie: Movie(adult: false, backdrop_path: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg", id: 893723, original_language: "en", original_title: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, poster_path: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", release_date: Date(), title: "PAW Patrol: The Mighty Movie", video: false, vote_average: 6.928, vote_count: 125))
+        //PAW Patrol: The Mighty Movie
+        //Aux()
     }
 }

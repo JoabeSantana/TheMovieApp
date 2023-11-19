@@ -1,17 +1,22 @@
 //
-//  HomeView.swift
+//  MovieService.swift
 //  TheMovieApp
 //
-//  Created by Joabe Santana Correia on 16/11/23.
+//  Created by Joabe Santana Correia on 19/11/23.
 //
 
 import Foundation
-import SwiftUI
 
-struct HomeView: View {
+enum MovieServiceError: Error {
+    case invalidURL
+    case couldNotReturnMovieList(errorCode: Int)
+    case couldNotDecodeObject
+    case couldNotGetError
+}
+
+class MovieService {
     
-    var movies: [Movie] = {
-        let jsonMovieData = """
+    let jsonMovieData = """
             {
               "dates": {
                 "maximum": "2023-11-15",
@@ -421,100 +426,41 @@ struct HomeView: View {
               "total_results": 2014
             }
         """
+    
+    func fetchMovieList(sizeList: Int = 30) async throws -> [Movie] {
+        
+        let headers = [
+          "accept": "application/json",
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NzAwNDkwNmU1OGQwMWMzNTkwMjc5Yjg2MDkxNjc2ZCIsInN1YiI6IjY1NGFkN2ZmZmQ0ZjgwMDExZWQyZTgzMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.w7bnNINfJIabmAm_gRv0VlesdyZYTvWv9Cqbqim8Scc"
+        ]
+        
+        let urlString = "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"
+
+        guard let url = URL(string: urlString) else {
+            throw MovieServiceError.invalidURL
+        }
+        
+        let request = NSMutableURLRequest(url: url,
+                                                cachePolicy: .useProtocolCachePolicy,
+                                            timeoutInterval: 10.0)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = headers
+
         do {
-            let response = try JSONDecoder().decode(MovieResponse.self, from: jsonMovieData.data(using: .utf8)!)
-            //print(response.results.first?.poster_path)
+            let (data, _) = try await URLSession.shared.data(for: request as URLRequest)
+
+            //let response = try JSONDecoder().decode(DogResponse.self, from: jsonDogData.data(using: .utf8)!)
+            let response = try JSONDecoder().decode(MovieResponse.self, from: data)
             return response.results
         } catch {
             print(error)
-            return []
-        }
-    }()
-    
-    var colums: [GridItem] = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16),
-    ]
-    
-    var body: some View {
-        
-        NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: colums, spacing: 16) {
-                    ForEach(movies, id: \.id) { movie in
-                        NavigationLink {
-                            MovieDetailView(movie: movie)
-                        } label: {
-                            MovieCard(movie: movie)
-                        }
-                    }
-                }.padding()
-            }.navigationTitle("Home")
-                .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
-        }
-        
-    }
-}
-
-struct MovieCard: View {
-    
-    let movie: Movie
-    
-    var body: some View {
-        AsyncImage(url: URL(string: movie.poster_path)) { imagePhase in
-            switch imagePhase {
-            case let .success(image) :
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .roundedCorners()
-            case .empty:
-                ZStack {
-                    Image("PosterTemplate")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-                        .roundedCorners()
-                    ProgressView()
-                }
-            case .failure(_):
-                ZStack {
-                    Image("PosterTemplate")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-                    .roundedCorners()
-                    Image(systemName: "rectangle.slash")
-                        .foregroundStyle(.white)
-                }
-            @unknown default:
-                Image("PosterTemplate")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-                    .roundedCorners()
+            if let urlError = error as? URLError {
+                throw MovieServiceError.couldNotReturnMovieList(errorCode: urlError.errorCode)
+            } else if let _ = error as? DecodingError {
+                throw MovieServiceError.couldNotDecodeObject
+            } else {
+                throw MovieServiceError.couldNotGetError
             }
         }
-        
-        //        AsyncImage(url: URL(string: movie.poster_path)) { image in
-        //            image.resizable()
-        //                .aspectRatio(contentMode: .fit)
-        //                .roundedCorners()
-        //        } placeholder: {
-        //            ZStack(alignment: .center) {
-        //                Image("PosterTemplate")
-        //                    .resizable()
-        //                    .aspectRatio(contentMode: .fit)
-        //                    .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-        //                    .roundedCorners()
-        //                ProgressView()
-        //                    .progressViewStyle(CircularProgressViewStyle(tint: Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255)))
-        //            }
-        //        }
     }
-}
-
-#Preview {
-    HomeView()
 }

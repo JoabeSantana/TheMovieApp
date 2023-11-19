@@ -14,7 +14,11 @@ enum MovieServiceError: Error {
     case couldNotGetError
 }
 
-class MovieService {
+protocol MovieServiceProtocol {
+    func fetchMovieList(page: Int) async throws -> [Movie]
+}
+
+class MovieService: MovieServiceProtocol {
     
     let jsonMovieData = """
             {
@@ -427,7 +431,7 @@ class MovieService {
             }
         """
     
-    func fetchMovieList(sizeList: Int = 30) async throws -> [Movie] {
+    func fetchMovieList(page: Int = 30) async throws -> [Movie] {
         
         let headers = [
           "accept": "application/json",

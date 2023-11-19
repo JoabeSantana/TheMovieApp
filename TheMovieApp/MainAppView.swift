@@ -12,7 +12,7 @@ struct MainAppView: View {
     
     var body: some View {
         TabView {
-            HomeView()
+            HomeView(movieService: MovieService())
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }

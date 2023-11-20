@@ -14,6 +14,12 @@ struct MovieDetailView: View {
     @State private var reviewsMenu = false
     @State private var castMenu = false
     
+    let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        return dateFormatter
+    }()
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, content: {
@@ -57,11 +63,9 @@ struct MovieDetailView: View {
                 
                 
                 HStack(alignment: .center){
-                    Text("\(Image(systemName: "calendar")) 2021")
+                    Text("\(Image(systemName: "calendar")) \(dateFormatter.string(from:  movie.release_date))")
                     Text("|")
-                    Text("\(Image(systemName: "clock")) 148 Minutes")
-                    Text("|")
-                    Text("\(Image(systemName: "ticket")) Action")
+                    Text("\(Image(systemName: movie.adult ? "figure.child.and.lock.fill" : "figure.child.and.lock.open.fill")) Restriction")
                 }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
                     .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
                     .foregroundStyle(Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255))

@@ -11,6 +11,7 @@ import SwiftUI
 struct HomeView: View {
     
     @State private var movies: [Movie] = []
+    @State private var searchText = ""
     
     private let movieService: MovieServiceProtocol
     
@@ -29,7 +30,7 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 LazyVGrid(columns: colums, spacing: 16) {
-                    ForEach(movies, id: \.id) { movie in
+                    ForEach(listMovies(), id: \.id) { movie in
                         NavigationLink {
                             MovieDetailView(movie: movie)
                         } label: {
@@ -39,18 +40,29 @@ struct HomeView: View {
                 }.padding()
             }.navigationTitle("Home")
                 .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
-        }.onAppear(perform: {
+        }
+        .searchable(text: $searchText, prompt: "Search a Movie")
+        .onAppear(perform: {
             fetchMovies()
         })
-        
     }
 }
 
 private extension HomeView {
+    
+    func listMovies() -> [Movie] {
+        if searchText.isEmpty {
+            return movies
+        } else {
+            return movies.filter({$0.title.contains(searchText)})
+        }
+    }
+    
     func fetchMovies(){
         Task {
             do {
                 let movieList = try await movieService.fetchMovieList(page: 1)
+                movies.removeAll()
                 movies.append(contentsOf: movieList)
             } catch {
                 print(error.localizedDescription)

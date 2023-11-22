@@ -38,7 +38,7 @@ struct HomeView: View {
                         } label: {
                             MovieCard(movie: movie)
                                 .onAppear(perform: {
-                                    if movie.id == lastMovieId {
+                                    if movie.id == lastMovieId && pageService <= 10 {
                                         fetchMovies(page: pageService)
                                     }
                                 })
@@ -46,8 +46,8 @@ struct HomeView: View {
                     }
                 }.padding()
             }
-            .navigationTitle("Home")
-                .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
+            .navigationTitle("Now Playing")
+            .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
         }
         .searchable(text: $searchText, prompt: "Search a Movie")
         .onAppear(perform: {
@@ -80,114 +80,6 @@ private extension HomeView {
             }
         }
     }
-}
-
-struct MovieCard: View {
-    
-    let movie: Movie
-    
-    var body: some View {
-        PosterImageView(imageUrl: movie.getPosterPath())
-    }
-}
-
-struct PosterImageView: View {
-    
-    let imageUrl: String
-    
-    private let colorTemplate = Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255)
-    
-    var body: some View {
-        AsyncImage(url: URL(string: imageUrl)) { imagePhase in
-            switch imagePhase {
-            case let .success(image) :
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .roundedCorners()
-            case .empty:
-                ZStack {
-                    Image("PosterTemplate")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .background(colorTemplate)
-                        .roundedCorners()
-                    ProgressView().frame(maxWidth: 10) 
-                }
-            case .failure(_):
-                ZStack {
-                    Image("PosterTemplate")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .background(colorTemplate)
-                    .roundedCorners()
-                    Image(systemName: "rectangle.slash")
-                        .foregroundStyle(.white)
-                }
-            @unknown default:
-                Image("PosterTemplate")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .background(colorTemplate)
-                    .roundedCorners()
-            }
-        }
-    }
-}
-
-struct BackdropImageView: View {
-    
-    let imageUrl: String
-    
-    var topLeadingRadius: CGFloat = 0
-    var bottomLeadingRadius: CGFloat = 0
-    var bottomTrailingRadius: CGFloat = 0
-    var topTrailingRadius: CGFloat = 0
-    
-    private let colorTemplate = Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255)
-    
-    var body: some View {
-        ZStack {
-            AsyncImage(url: URL(string: imageUrl)) { imagePhase in
-                switch imagePhase {
-                case let .success(image) :
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
-                case .empty:
-                    ZStack {
-                        Image("BackdropTemplate")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .background(colorTemplate)
-                            .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
-                        ProgressView().frame(maxWidth: 10, maxHeight: 10)
-                    }
-                case .failure(_):
-                    ZStack {
-                        Image("BackdropTemplate")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .background(colorTemplate)
-                            .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
-                        Image(systemName: "rectangle.slash")
-                            .foregroundStyle(.white)
-                    }
-                @unknown default:
-                    Image("BackdropTemplate")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .background(colorTemplate)
-                        .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
-                }
-            }
-        }
-    }
-}
-
-#Preview {
-    HomeView(movieService: MovieServiceMock())
 }
 
 class MovieServiceMock : MovieServiceProtocol {
@@ -601,4 +493,8 @@ class MovieServiceMock : MovieServiceProtocol {
         let response = try JSONDecoder().decode(MovieResponse.self, from: jsonMovieData.data(using: .utf8)!)
         return response.results
     }
+}
+
+#Preview {
+    HomeView(movieService: MovieServiceMock())
 }

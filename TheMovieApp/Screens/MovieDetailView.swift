@@ -27,8 +27,8 @@ struct MovieDetailView: View {
                 BackdropImageView(imageUrl: movie.getBackdropPath(), bottomLeadingRadius: 20, bottomTrailingRadius: 20)
                 
                 VoteAverageView(voteAverage: movie.vote_average)
-                    .padding(EdgeInsets(top: 0, leading: 10, bottom: -60, trailing: 10))
-                    .offset(x: 0, y: -60)
+                    .padding(EdgeInsets(top: 0, leading: 10, bottom: -60, trailing: 5))
+                    .offset(x: 0, y: -51)
                 
                 HStack(alignment: .bottom) {
                     
@@ -136,7 +136,7 @@ struct MovieDetailView: View {
                             .foregroundStyle(.white)
                     }
                     
-                        
+                    
                 }.padding()
             })
             .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .topLeading)
@@ -156,33 +156,7 @@ struct MovieDetailView: View {
 }
 
 #Preview {
-    
     NavigationStack {
         MovieDetailView(movie: Movie(adult: false, backdrop_path: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg", id: 893723, original_language: "en", original_title: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, poster_path: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", release_date: Date(), title: "PAW Patrol: The Mighty Movie", video: false, vote_average: 6.928, vote_count: 125))
-        //PAW Patrol: The Mighty Movie
-        //Aux()
-    }
-}
-
-struct VoteAverageView: View {
-    
-    let voteAverage: Double
-    
-    var body: some View {
-        HStack {
-            Spacer()
-            HStack(alignment: .center) {
-                
-                Image(systemName: "star")
-                    .foregroundColor(.orange)
-                    .bold()
-                Text("\(voteAverage, specifier: "%.2f")")
-                    .foregroundStyle(.orange)
-                    .bold()
-            }
-            .frame(width: 90, height: 40)
-            .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
-            .clipShape(.capsule)
-        }
     }
 }

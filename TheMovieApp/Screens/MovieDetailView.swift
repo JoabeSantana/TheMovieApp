@@ -30,23 +30,7 @@ struct MovieDetailView: View {
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: -60, trailing: 5))
                     .offset(x: 0, y: -51)
                 
-                HStack(alignment: .bottom) {
-                    
-                    ZStack {
-                        PosterImageView(imageUrl: movie.getPosterPath())
-                            .overlay(RoundedRectangle(cornerRadius: 20)
-                                .stroke(.orange, lineWidth: 2))
-                    }
-                    VStack() {
-                        Text(movie.title)
-                            .font(.system(size: 24))
-                            .bold()
-                            .foregroundStyle(.white)
-                            .lineLimit(2)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: 75, alignment: .leading)
-                    
-                }
+                PosterImageTitleView(movie: movie)
                 .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: 150, alignment: .top)
                 .padding(EdgeInsets(top: 0, leading: 30, bottom: -95, trailing: 30))
                 .offset(x: 0, y: -95)
@@ -152,6 +136,30 @@ struct MovieDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Detail")
         .background(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
+    }
+}
+
+struct PosterImageTitleView : View {
+    
+    let movie: Movie
+    
+    var body: some View {
+        HStack(alignment: .bottom) {
+            
+            PosterImageView(imageUrl: movie.getPosterPath())
+                .overlay(RoundedRectangle(cornerRadius: 20)
+                    .stroke(.orange, lineWidth: 2))
+            
+            VStack() {
+                Text(movie.title)
+                    .font(.system(size: 24))
+                    .bold()
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+            }
+            .frame(maxWidth: .infinity, maxHeight: 75, alignment: .leading)
+            
+        }
     }
 }
 

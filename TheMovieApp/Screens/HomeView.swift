@@ -47,9 +47,8 @@ struct HomeView: View {
                 }.padding()
             }
             .navigationTitle("Now Playing")
-            .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
         }
-        .searchable(text: $searchText, prompt: "Search a Movie")
+        .searchable(text: $searchText, prompt: "Search for Movies")
         .onAppear(perform: {
             fetchMovies(page: pageService)
         })

@@ -54,7 +54,7 @@ struct Movie: Decodable {
     let video: Bool
     let vote_average: Double
     let vote_count: Int
-    let baseUrlImagePath: String = "https://image.tmdb.org/t/p/w500/"
+    let baseUrlImagePath: String = "https://image.tmdb.org/t/p/original/"
     
     
     enum CodingKeys: CodingKey {

@@ -12,6 +12,8 @@ struct HomeView: View {
     
     @State private var movies: [Movie] = []
     @State private var searchText = ""
+    @State private var lastMovieId: Int = 0
+    @State private var pageService: Int = 1
     
     private let movieService: MovieServiceProtocol
     
@@ -35,15 +37,21 @@ struct HomeView: View {
                             MovieDetailView(movie: movie)
                         } label: {
                             MovieCard(movie: movie)
+                                .onAppear(perform: {
+                                    if movie.id == lastMovieId {
+                                        fetchMovies(page: pageService)
+                                    }
+                                })
                         }
                     }
                 }.padding()
-            }.navigationTitle("Home")
+            }
+            .navigationTitle("Home")
                 .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
         }
         .searchable(text: $searchText, prompt: "Search a Movie")
         .onAppear(perform: {
-            fetchMovies()
+            fetchMovies(page: pageService)
         })
     }
 }
@@ -58,12 +66,15 @@ private extension HomeView {
         }
     }
     
-    func fetchMovies(){
+    func fetchMovies(page: Int){
         Task {
             do {
-                let movieList = try await movieService.fetchMovieList(page: 1)
-                movies.removeAll()
+                let movieList = try await movieService.fetchMovieList(page: page)
+                //movies.removeAll()
                 movies.append(contentsOf: movieList)
+                lastMovieId = movies.last!.id
+                pageService += 1
+                print(pageService)
             } catch {
                 print(error.localizedDescription)
             }
@@ -76,7 +87,18 @@ struct MovieCard: View {
     let movie: Movie
     
     var body: some View {
-        AsyncImage(url: URL(string: movie.poster_path)) { imagePhase in
+        PosterImageView(imageUrl: movie.getPosterPath())
+    }
+}
+
+struct PosterImageView: View {
+    
+    let imageUrl: String
+    
+    private let colorTemplate = Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255)
+    
+    var body: some View {
+        AsyncImage(url: URL(string: imageUrl)) { imagePhase in
             switch imagePhase {
             case let .success(image) :
                 image
@@ -88,16 +110,16 @@ struct MovieCard: View {
                     Image("PosterTemplate")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
+                        .background(colorTemplate)
                         .roundedCorners()
-                    ProgressView()
+                    ProgressView().frame(maxWidth: 10) 
                 }
             case .failure(_):
                 ZStack {
                     Image("PosterTemplate")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
+                        .background(colorTemplate)
                     .roundedCorners()
                     Image(systemName: "rectangle.slash")
                         .foregroundStyle(.white)
@@ -106,26 +128,61 @@ struct MovieCard: View {
                 Image("PosterTemplate")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
+                    .background(colorTemplate)
                     .roundedCorners()
             }
         }
-        
-        //        AsyncImage(url: URL(string: movie.poster_path)) { image in
-        //            image.resizable()
-        //                .aspectRatio(contentMode: .fit)
-        //                .roundedCorners()
-        //        } placeholder: {
-        //            ZStack(alignment: .center) {
-        //                Image("PosterTemplate")
-        //                    .resizable()
-        //                    .aspectRatio(contentMode: .fit)
-        //                    .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-        //                    .roundedCorners()
-        //                ProgressView()
-        //                    .progressViewStyle(CircularProgressViewStyle(tint: Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255)))
-        //            }
-        //        }
+    }
+}
+
+struct BackdropImageView: View {
+    
+    let imageUrl: String
+    
+    var topLeadingRadius: CGFloat = 0
+    var bottomLeadingRadius: CGFloat = 0
+    var bottomTrailingRadius: CGFloat = 0
+    var topTrailingRadius: CGFloat = 0
+    
+    private let colorTemplate = Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255)
+    
+    var body: some View {
+        ZStack {
+            AsyncImage(url: URL(string: imageUrl)) { imagePhase in
+                switch imagePhase {
+                case let .success(image) :
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
+                case .empty:
+                    ZStack {
+                        Image("BackdropTemplate")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .background(colorTemplate)
+                            .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
+                        ProgressView().frame(maxWidth: 10, maxHeight: 10)
+                    }
+                case .failure(_):
+                    ZStack {
+                        Image("BackdropTemplate")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .background(colorTemplate)
+                            .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
+                        Image(systemName: "rectangle.slash")
+                            .foregroundStyle(.white)
+                    }
+                @unknown default:
+                    Image("BackdropTemplate")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .background(colorTemplate)
+                        .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
+                }
+            }
+        }
     }
 }
 
@@ -542,7 +599,6 @@ class MovieServiceMock : MovieServiceProtocol {
                 }
             """
         let response = try JSONDecoder().decode(MovieResponse.self, from: jsonMovieData.data(using: .utf8)!)
-        
         return response.results
     }
 }

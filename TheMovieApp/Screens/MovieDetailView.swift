@@ -24,29 +24,19 @@ struct MovieDetailView: View {
         ScrollView {
             VStack(alignment: .leading, content: {
                 
-                BackdropImageView(imageUrl: movie.backdrop_path)
+                BackdropImageView(imageUrl: movie.getBackdropPath(), bottomLeadingRadius: 20, bottomTrailingRadius: 20)
                 
-                HStack {
-                    Spacer()
-                    HStack(alignment: .center) {
-                        
-                        Image(systemName: "star")
-                            .foregroundColor(.orange)
-                            .bold()
-                        Text("\(movie.vote_average, specifier: "%.2f")")
-                            .foregroundStyle(.orange)
-                            .bold()
-                    }
-                    .frame(width: 90, height: 40)
-                    .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
-                    .clipShape(.capsule)
-                }
-                .padding(EdgeInsets(top: 0, leading: 10, bottom: -60, trailing: 10))
-                .offset(x: 0, y: -60)
+                VoteAverageView(voteAverage: movie.vote_average)
+                    .padding(EdgeInsets(top: 0, leading: 10, bottom: -60, trailing: 10))
+                    .offset(x: 0, y: -60)
                 
                 HStack(alignment: .bottom) {
                     
-                    PosterImageView(imageUrl: movie.poster_path)
+                    ZStack {
+                        PosterImageView(imageUrl: movie.getPosterPath())
+                            .overlay(RoundedRectangle(cornerRadius: 20)
+                                .stroke(.orange, lineWidth: 2))
+                    }
                     VStack() {
                         Text(movie.title)
                             .font(.system(size: 24))
@@ -165,57 +155,34 @@ struct MovieDetailView: View {
     }
 }
 
-struct BackdropImageView: View {
-    
-    let imageUrl: String
-    
-    var body: some View {
-        ZStack {
-            AsyncImage(url: URL(string: imageUrl)) { image in
-                image.resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .roundedCorners(topLeadingRadius: 0, topTrailingRadius: 0)
-            } placeholder: {
-                Image("BackdropTemplate")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-                    .roundedCorners(topLeadingRadius: 0, topTrailingRadius: 0)
-            }
-        }
-    }
-}
-
-struct PosterImageView: View {
-    
-    let imageUrl: String
-    
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .stroke(lineWidth: 2)
-                .foregroundStyle(.orange)
-                .frame(maxWidth: 100)
-            AsyncImage(url: URL(string: imageUrl)) { image in
-                image.resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .roundedCorners()
-            } placeholder: {
-                Image("PosterTemplate")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .background(Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255))
-                    .roundedCorners()
-            }
-        }
-    }
-}
-
 #Preview {
     
     NavigationStack {
         MovieDetailView(movie: Movie(adult: false, backdrop_path: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg", id: 893723, original_language: "en", original_title: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, poster_path: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", release_date: Date(), title: "PAW Patrol: The Mighty Movie", video: false, vote_average: 6.928, vote_count: 125))
         //PAW Patrol: The Mighty Movie
         //Aux()
+    }
+}
+
+struct VoteAverageView: View {
+    
+    let voteAverage: Double
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            HStack(alignment: .center) {
+                
+                Image(systemName: "star")
+                    .foregroundColor(.orange)
+                    .bold()
+                Text("\(voteAverage, specifier: "%.2f")")
+                    .foregroundStyle(.orange)
+                    .bold()
+            }
+            .frame(width: 90, height: 40)
+            .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
+            .clipShape(.capsule)
+        }
     }
 }

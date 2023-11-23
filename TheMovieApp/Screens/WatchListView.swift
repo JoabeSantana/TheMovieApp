@@ -25,8 +25,10 @@ struct WatchListView: View {
                             MovieCardInfoView(movie: movie)
                         }
                     }
-                }.padding()
-            }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+            }
             .navigationTitle("Watch List")
         }.searchable(text: $seachtext, prompt: "Search for Movies")
     }

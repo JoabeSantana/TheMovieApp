@@ -14,11 +14,7 @@ enum MovieServiceError: Error {
     case couldNotGetError
 }
 
-protocol MovieServiceProtocol {
-    func fetchMovieList(page: Int) async throws -> [Movie]
-}
-
-class MovieService: MovieServiceProtocol {
+class MovieService: MovieServiceable {
     
     func fetchMovieList(page: Int = 1) async throws -> [Movie] {
         

@@ -10,9 +10,11 @@ import Foundation
 
 struct MainAppView: View {
     
+    @StateObject var viewModel = MovieViewViewModel(service: MovieService())
+    
     var body: some View {
         TabView {
-            HomeView(movieService: MovieService())
+            HomeView(viewModel: viewModel)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }

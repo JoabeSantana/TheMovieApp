@@ -9,16 +9,13 @@ import Foundation
 import SwiftUI
 
 struct HomeView: View {
-    
-    @State private var movies: [Movie] = []
+
     @State private var searchText = ""
-    @State private var lastMovieId: Int = 0
-    @State private var pageService: Int = 1
     
-    private let movieService: MovieServiceProtocol
+    @ObservedObject var viewModel: MovieViewViewModel
     
-    init(movieService: MovieServiceProtocol) {
-        self.movieService = movieService
+    init(viewModel: MovieViewViewModel) {
+        self.viewModel = viewModel
     }
     
     var colums: [GridItem] = [
@@ -38,8 +35,8 @@ struct HomeView: View {
                         } label: {
                             MovieCard(movie: movie)
                                 .onAppear(perform: {
-                                    if movie.id == lastMovieId && pageService <= 10 {
-                                        fetchMovies(page: pageService)
+                                    if movie.id == viewModel.lastMovieId && viewModel.pageService <= viewModel.maxPagesService {
+                                        viewModel.fetchMovies(page: viewModel.pageService)
                                     }
                                 })
                         }
@@ -50,7 +47,7 @@ struct HomeView: View {
         }
         .searchable(text: $searchText, prompt: "Search for Movies")
         .onAppear(perform: {
-            fetchMovies(page: pageService)
+            viewModel.fetchMovies(page: viewModel.pageService)
         })
     }
 }
@@ -59,29 +56,14 @@ private extension HomeView {
     
     func listMovies() -> [Movie] {
         if searchText.isEmpty {
-            return movies
+            return viewModel.listMoviesModel
         } else {
-            return movies.filter({$0.title.contains(searchText)})
-        }
-    }
-    
-    func fetchMovies(page: Int){
-        Task {
-            do {
-                let movieList = try await movieService.fetchMovieList(page: page)
-                //movies.removeAll()
-                movies.append(contentsOf: movieList)
-                lastMovieId = movies.last!.id
-                pageService += 1
-                print(pageService)
-            } catch {
-                print(error.localizedDescription)
-            }
+            return viewModel.listMoviesModel.filter({$0.title.contains(searchText)})
         }
     }
 }
 
-fileprivate final class MovieServiceMock : MovieServiceProtocol {
+fileprivate final class MovieServiceMock : MovieServiceable {
     func fetchMovieList(page: Int) async throws -> [Movie] {
         let jsonMovieString = """
                 {
@@ -500,5 +482,5 @@ fileprivate final class MovieServiceMock : MovieServiceProtocol {
 }
 
 #Preview {
-    HomeView(movieService: MovieServiceMock())
+    HomeView(viewModel: MovieViewViewModel(service: MovieServiceMock()))
 }

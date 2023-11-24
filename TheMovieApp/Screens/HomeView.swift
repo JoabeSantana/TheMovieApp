@@ -81,9 +81,9 @@ private extension HomeView {
     }
 }
 
-class MovieServiceMock : MovieServiceProtocol {
+fileprivate final class MovieServiceMock : MovieServiceProtocol {
     func fetchMovieList(page: Int) async throws -> [Movie] {
-        let jsonMovieData = """
+        let jsonMovieString = """
                 {
                   "dates": {
                     "maximum": "2023-11-22",
@@ -489,7 +489,12 @@ class MovieServiceMock : MovieServiceProtocol {
                   "total_results": 2106
                 }
             """
-        let response = try JSONDecoder().decode(MovieResponse.self, from: jsonMovieData.data(using: .utf8)!)
+        
+        guard let movieJsonData = jsonMovieString.data(using: .utf8) else {
+            return []
+        }
+        
+        let response = try JSONDecoder().decode(MovieResponse.self, from: movieJsonData)
         return response.results
     }
 }

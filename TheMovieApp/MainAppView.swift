@@ -18,9 +18,9 @@ struct MainAppView: View {
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
-            SearchView()
+            SearchView(viewModel: viewModel)
                 .tabItem {
-                    Label("Seach", systemImage: "magnifyingglass")
+                    Label("Search", systemImage: "magnifyingglass")
                 }
             WatchListView()
                 .tabItem {

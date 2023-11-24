@@ -18,7 +18,7 @@ struct HomeView: View {
         self.viewModel = viewModel
     }
     
-    var colums: [GridItem] = [
+    private let colums: [GridItem] = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16),

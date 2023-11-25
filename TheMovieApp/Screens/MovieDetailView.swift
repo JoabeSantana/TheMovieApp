@@ -24,7 +24,7 @@ struct MovieDetailView: View {
         ScrollView {
             VStack(alignment: .leading, content: {
                 
-                BackdropImageView(imageUrl: movie.getBackdropPath(), bottomLeadingRadius: 20, bottomTrailingRadius: 20)
+                BackdropImageView(imageUrl: ImageUtil.getImageUrl(path: movie.backdrop_path, original: true), bottomLeadingRadius: 20, bottomTrailingRadius: 20)
                 
                 VoteAverageView(voteAverage: movie.vote_average)
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: -60, trailing: 5))
@@ -146,9 +146,17 @@ struct PosterImageTitleView : View {
     var body: some View {
         HStack(alignment: .bottom) {
             
-            PosterImageView(imageUrl: movie.getPosterPath())
-                .overlay(RoundedRectangle(cornerRadius: 20)
-                    .stroke(.orange, lineWidth: 2))
+            NavigationStack {
+                NavigationLink {
+                    FullImageView(url: ImageUtil.getImageUrl(path: movie.poster_path, original: true))
+                        .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
+                } label: {
+                    PosterImageView(imageUrl: ImageUtil.getImageUrl(path: movie.poster_path))
+                        .overlay(RoundedRectangle(cornerRadius: 20)
+                            .stroke(.orange, lineWidth: 2))
+                }
+
+            }
             
             VStack() {
                 Text(movie.title)
@@ -166,5 +174,23 @@ struct PosterImageTitleView : View {
 #Preview {
     NavigationStack {
         MovieDetailView(movie: Movie(adult: false, backdrop_path: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg", id: 893723, original_language: "en", original_title: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, poster_path: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", release_date: Date(), title: "PAW Patrol: The Mighty Movie", video: false, vote_average: 6.928, vote_count: 125))
+    }
+}
+
+struct FullImageView: View {
+    
+    let url: String
+    
+    var body: some View {
+        VStack {
+            AsyncImage(url: URL(string: url)) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } placeholder: {
+                ProgressView()
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

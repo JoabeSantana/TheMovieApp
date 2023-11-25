@@ -54,7 +54,7 @@ struct MovieCardInfoView: View {
     
     var body: some View {
         HStack {
-            PosterImageView(imageUrl: movie.getPosterPath())
+            PosterImageView(imageUrl: ImageUtil.getImageUrl(path: movie.poster_path))
             VStack(alignment: .leading){
                 Text(movie.title)
                     .lineLimit(2)

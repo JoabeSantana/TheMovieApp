@@ -12,6 +12,6 @@ struct MovieCard: View {
     let movie: Movie
     
     var body: some View {
-        PosterImageView(imageUrl: movie.getPosterPath())
+        PosterImageView(imageUrl: ImageUtil.getImageUrl(path: movie.poster_path))
     }
 }

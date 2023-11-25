@@ -18,17 +18,11 @@ struct HomeView: View {
         self.viewModel = viewModel
     }
     
-    private let colums: [GridItem] = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16),
-    ]
-    
     var body: some View {
         
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: colums, spacing: 16) {
+                LazyVGrid(columns: getColumsGridItems(), spacing: 16) {
                     ForEach(listMovies(), id: \.id) { movie in
                         NavigationLink {
                             MovieDetailView(movie: movie)
@@ -59,6 +53,24 @@ private extension HomeView {
             return viewModel.listMoviesModel
         } else {
             return viewModel.listMoviesModel.filter({$0.title.contains(searchText)})
+        }
+    }
+    
+    private func getColumsGridItems() -> [GridItem] {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return [
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+            ]
+        } else {
+            return [
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+            ]
         }
     }
 }

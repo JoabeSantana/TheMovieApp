@@ -9,8 +9,6 @@ import Foundation
 import SwiftUI
 
 struct HomeView: View {
-
-    @State private var searchText = ""
     
     @ObservedObject var viewModel: MovieViewViewModel
     
@@ -22,8 +20,8 @@ struct HomeView: View {
         
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: getColumsGridItems(), spacing: 16) {
-                    ForEach(listMovies(), id: \.id) { movie in
+                LazyVGrid(columns: viewModel.getColumsGridItems(), spacing: 16) {
+                    ForEach(viewModel.listMovies(), id: \.id) { movie in
                         NavigationLink {
                             MovieDetailView(movie: movie)
                         } label: {
@@ -39,39 +37,10 @@ struct HomeView: View {
             }
             .navigationTitle("Now Playing")
         }
-        .searchable(text: $searchText, prompt: "Search for Movies")
+        .searchable(text: $viewModel.searchText , prompt: "Search for Movies")
         .onAppear(perform: {
             viewModel.fetchMovies(page: viewModel.pageService)
         })
-    }
-}
-
-private extension HomeView {
-    
-    func listMovies() -> [Movie] {
-        if searchText.isEmpty {
-            return viewModel.listMoviesModel
-        } else {
-            return viewModel.listMoviesModel.filter({$0.title.contains(searchText)})
-        }
-    }
-    
-    private func getColumsGridItems() -> [GridItem] {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            return [
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-            ]
-        } else {
-            return [
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-            ]
-        }
     }
 }
 

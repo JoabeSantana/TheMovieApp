@@ -18,6 +18,7 @@ class MovieViewViewModel: ObservableObject {
     let maxPagesService: Int = 10
     
     @Published var listMoviesModel: [Movie] = []
+    @Published var searchText = ""
     
     init(service: MovieServiceable) {
         self.service = service
@@ -40,4 +41,29 @@ class MovieViewViewModel: ObservableObject {
         }
     }
     
+    func listMovies() -> [Movie] {
+        if searchText.isEmpty {
+            listMoviesModel
+        } else {
+            listMoviesModel.filter({$0.title.lowercased().contains(searchText.lowercased())})
+        }
+    }
+    
+    func getColumsGridItems() -> [GridItem] {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return [
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+            ]
+        } else {
+            return [
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+            ]
+        }
+    }
 }

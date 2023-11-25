@@ -137,7 +137,6 @@
 			children = (
 				963510122B0A65980025228A /* Core */,
 				9635143C2B050E8B002E9288 /* Screens */,
-				96AE66FB2B02E1B0003E81C0 /* Models */,
 				96A4A0C12AFC57D500AABACE /* TheMovieApp.swift */,
 				96A4A0C32AFC57D500AABACE /* MainAppView.swift */,
 				96A4A0C52AFC57D600AABACE /* Assets.xcassets */,
@@ -157,6 +156,8 @@
 		96AD276B2B1029F6005AEE4E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				96AE66FE2B02E279003E81C0 /* Movie.swift */,
+				96AE66FC2B02E1CB003E81C0 /* MovieResponse.swift */,
 				96AD276D2B102A44005AEE4E /* MovieViewViewModel.swift */,
 			);
 			path = Models;
@@ -168,15 +169,6 @@
 				96AD27702B102B47005AEE4E /* MovieServiceable.swift */,
 			);
 			path = Protocols;
-			sourceTree = "<group>";
-		};
-		96AE66FB2B02E1B0003E81C0 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				96AE66FC2B02E1CB003E81C0 /* MovieResponse.swift */,
-				96AE66FE2B02E279003E81C0 /* Movie.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		96E0F7872B1178B800161ED3 /* Utils */ = {

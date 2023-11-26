@@ -9,10 +9,10 @@ import Foundation
 
 struct Movie: Decodable {
     
-    internal init(adult: Bool, backdropPath: String, id: Int, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String, releaseDate: Date, title: String, video: Bool, voteAverage: Double, voteCount: Int) {
+    internal init(id: Int, adult: Bool, backdropPath: String, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String, releaseDate: Date, title: String, video: Bool, voteAverage: Double, voteCount: Int) {
+        self.id = id
         self.adult = adult
         self.backdropPath = backdropPath
-        self.id = id
         self.originalLanguage = originalLanguage
         self.originalTitle = originalTitle
         self.overview = overview
@@ -25,9 +25,9 @@ struct Movie: Decodable {
         self.voteCount = voteCount
     }
     
+    let id: Int
     let adult: Bool
     let backdropPath: String
-    let id: Int
     let originalLanguage: String
     let originalTitle: String
     let overview: String

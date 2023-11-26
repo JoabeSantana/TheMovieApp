@@ -12,12 +12,15 @@ struct MainAppView: View {
     
     @StateObject var viewModel = MovieViewViewModel(service: MovieService())
     
+    let persistenceController = PersistenceController.shared
+    
     var body: some View {
         TabView {
             HomeView(viewModel: viewModel)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
             SearchView(viewModel: viewModel)
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
@@ -26,8 +29,9 @@ struct MainAppView: View {
                 .tabItem {
                     Label("Watch List", systemImage: "bookmark")
                 }
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
-        .colorScheme(.dark)
+        .preferredColorScheme(.dark)
     }
 }
 

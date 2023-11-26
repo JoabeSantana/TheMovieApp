@@ -5,12 +5,12 @@
 //  Created by Joabe Santana Correia on 16/11/23.
 //
 
-import Foundation
 import SwiftUI
 
 struct HomeView: View {
     
     @ObservedObject var viewModel: MovieViewViewModel
+    @Environment(\.managedObjectContext) private var viewContext
     
     init(viewModel: MovieViewViewModel) {
         self.viewModel = viewModel
@@ -24,6 +24,7 @@ struct HomeView: View {
                     ForEach(viewModel.listMovies(), id: \.id) { movie in
                         NavigationLink {
                             MovieDetailView(movie: movie)
+                                .environment(\.managedObjectContext, viewContext)
                         } label: {
                             MovieCard(movie: movie)
                                 .onAppear(perform: {

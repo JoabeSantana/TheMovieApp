@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MovieDetailView: View {
     
+    @Environment(\.managedObjectContext) private var viewContext
+    
     let movie: Movie
     @State private var aboutMenu = true
     @State private var reviewsMenu = false
@@ -128,7 +130,7 @@ struct MovieDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing){
                     Button("\(Image(systemName: "bookmark"))"){
-                        print("Ok")
+                        addMovie(movie: movie)
                     }
                 }
             }
@@ -136,6 +138,35 @@ struct MovieDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Detail")
         .background(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
+    }
+    
+    private func addMovie(movie: Movie) {
+        withAnimation {
+            let movieEntity = MovieEntity(context: viewContext)
+            movieEntity.id = movie.id
+            movieEntity.adult = movie.adult
+            movieEntity.backdropPath = ImageUtil.getImageUrl(path: movie.backdropPath)
+            movieEntity.originalLanguage = movie.originalLanguage
+            movieEntity.originalTitle = movie.originalTitle
+            movieEntity.overview = movie.overview
+            movieEntity.popularity = movie.popularity
+            movieEntity.posterPath = ImageUtil.getImageUrl(path: movie.posterPath)
+            movieEntity.releaseDate = movie.releaseDate
+            movieEntity.title = movie.title
+            movieEntity.video = movie.video
+            movieEntity.voteAverage = movie.voteAverage
+            movieEntity.voteCount = movie.voteCount
+
+            do {
+                try viewContext.save()
+            } catch {
+                print(error)
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
     }
 }
 

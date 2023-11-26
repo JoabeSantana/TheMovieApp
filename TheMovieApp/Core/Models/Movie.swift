@@ -9,7 +9,7 @@ import Foundation
 
 struct Movie: Decodable {
     
-    internal init(id: Int, adult: Bool, backdropPath: String, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String, releaseDate: Date, title: String, video: Bool, voteAverage: Double, voteCount: Int) {
+    internal init(id: Int,adult: Bool, backdropPath: String, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String, releaseDate: Date, title: String, video: Bool, voteAverage: Double, voteCount: Int) {
         self.id = id
         self.adult = adult
         self.backdropPath = backdropPath

@@ -24,9 +24,9 @@ struct MovieDetailView: View {
         ScrollView {
             VStack(alignment: .leading, content: {
                 
-                BackdropImageView(imageUrl: ImageUtil.getImageUrl(path: movie.backdrop_path, original: true), bottomLeadingRadius: 20, bottomTrailingRadius: 20)
+                BackdropImageView(imageUrl: ImageUtil.getImageUrl(path: movie.backdropPath, original: true), bottomLeadingRadius: 20, bottomTrailingRadius: 20)
                 
-                VoteAverageView(voteAverage: movie.vote_average)
+                VoteAverageView(voteAverage: movie.voteAverage)
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: -60, trailing: 5))
                     .offset(x: 0, y: -51)
                 
@@ -37,7 +37,7 @@ struct MovieDetailView: View {
                 
                 
                 HStack(alignment: .center){
-                    Text("\(Image(systemName: "calendar")) \(dateFormatter.string(from:  movie.release_date))")
+                    Text("\(Image(systemName: "calendar")) \(dateFormatter.string(from:  movie.releaseDate))")
                     Text("|")
                     Text("\(Image(systemName: movie.adult ? "figure.child.and.lock.fill" : "figure.child.and.lock.open.fill")) Restriction")
                 }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
@@ -148,10 +148,10 @@ struct PosterImageTitleView : View {
             
             NavigationStack {
                 NavigationLink {
-                    FullImageView(url: ImageUtil.getImageUrl(path: movie.poster_path, original: true))
+                    FullImageView(url: ImageUtil.getImageUrl(path: movie.posterPath, original: true))
                         .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
                 } label: {
-                    PosterImageView(imageUrl: ImageUtil.getImageUrl(path: movie.poster_path))
+                    PosterImageView(imageUrl: ImageUtil.getImageUrl(path: movie.posterPath))
                         .overlay(RoundedRectangle(cornerRadius: 20)
                             .stroke(.orange, lineWidth: 2))
                 }
@@ -173,7 +173,7 @@ struct PosterImageTitleView : View {
 
 #Preview {
     NavigationStack {
-        MovieDetailView(movie: Movie(adult: false, backdrop_path: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg", id: 893723, original_language: "en", original_title: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, poster_path: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", release_date: Date(), title: "PAW Patrol: The Mighty Movie", video: false, vote_average: 6.928, vote_count: 125))
+        MovieDetailView(movie: Movie(adult: false, backdropPath: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg", id: 893723, originalLanguage: "en", originalTitle: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, posterPath: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", releaseDate: Date(), title: "PAW Patrol: The Mighty Movie", video: false, voteAverage: 6.928, voteCount: 125))
     }
 }
 

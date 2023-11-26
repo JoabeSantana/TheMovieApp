@@ -9,72 +9,72 @@ import Foundation
 
 struct Movie: Decodable {
     
-    internal init(adult: Bool, backdrop_path: String, id: Int, original_language: String, original_title: String, overview: String, popularity: Double, poster_path: String, release_date: Date, title: String, video: Bool, vote_average: Double, vote_count: Int) {
+    internal init(adult: Bool, backdropPath: String, id: Int, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String, releaseDate: Date, title: String, video: Bool, voteAverage: Double, voteCount: Int) {
         self.adult = adult
-        self.backdrop_path = backdrop_path
+        self.backdropPath = backdropPath
         self.id = id
-        self.original_language = original_language
-        self.original_title = original_title
+        self.originalLanguage = originalLanguage
+        self.originalTitle = originalTitle
         self.overview = overview
         self.popularity = popularity
-        self.poster_path = poster_path
-        self.release_date = release_date
+        self.posterPath = posterPath
+        self.releaseDate = releaseDate
         self.title = title
         self.video = video
-        self.vote_average = vote_average
-        self.vote_count = vote_count
+        self.voteAverage = voteAverage
+        self.voteCount = voteCount
     }
     
     let adult: Bool
-    let backdrop_path: String
+    let backdropPath: String
     let id: Int
-    let original_language: String
-    let original_title: String
+    let originalLanguage: String
+    let originalTitle: String
     let overview: String
     let popularity: Double
-    let poster_path: String
-    let release_date: Date
+    let posterPath: String
+    let releaseDate: Date
     let title: String
     let video: Bool
-    let vote_average: Double
-    let vote_count: Int
+    let voteAverage: Double
+    let voteCount: Int
     //let baseUrlImagePath: String = "https://image.tmdb.org/t/p/original/"
     
     
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: String, CodingKey {
         case adult
-        case backdrop_path
+        case backdropPath = "backdrop_path"
         case id
-        case original_language
-        case original_title
+        case originalLanguage = "original_language"
+        case originalTitle = "original_title"
         case overview
         case popularity
-        case poster_path
-        case release_date
+        case posterPath = "poster_path"
+        case releaseDate = "release_date"
         case title
         case video
-        case vote_average
-        case vote_count
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.adult = try container.decode(Bool.self, forKey: .adult)
-        self.backdrop_path = try container.decodeIfPresent(String.self, forKey: .backdrop_path) ?? ""
+        self.backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath) ?? ""
         self.id = try container.decode(Int.self, forKey: .id)
-        self.original_language = try container.decode(String.self, forKey: .original_language)
-        self.original_title = try container.decode(String.self, forKey: .original_title)
+        self.originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
+        self.originalTitle = try container.decode(String.self, forKey: .originalTitle)
         self.overview = try container.decode(String.self, forKey: .overview)
         self.popularity = try container.decode(Double.self, forKey: .popularity)
-        self.poster_path = try container.decodeIfPresent(String.self, forKey: .poster_path) ?? ""
-        let date = try container.decode(String.self, forKey: .release_date)
+        self.posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath) ?? ""
+        let date = try container.decode(String.self, forKey: .releaseDate)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        self.release_date = dateFormatter.date(from: date) ?? Date()
+        self.releaseDate = dateFormatter.date(from: date) ?? Date()
         self.title = try container.decode(String.self, forKey: .title)
         self.video = try container.decode(Bool.self, forKey: .video)
-        self.vote_average = try container.decode(Double.self, forKey: .vote_average)
-        self.vote_count = try container.decode(Int.self, forKey: .vote_count)
+        self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)
+        self.voteCount = try container.decode(Int.self, forKey: .voteCount)
     }
     
 //    func getPosterPath() -> String {

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 @MainActor
-class MovieViewViewModel: ObservableObject {
+class HomeViewViewModel: ObservableObject {
     
     private let service: MovieServiceable
     
@@ -19,6 +19,24 @@ class MovieViewViewModel: ObservableObject {
     
     @Published var listMoviesModel: [Movie] = []
     @Published var searchText = ""
+    
+    var columsGridItems: [GridItem] {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return [
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+            ]
+        } else {
+            return [
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16),
+            ]
+        }
+    }
     
     init(service: MovieServiceable) {
         self.service = service
@@ -46,24 +64,6 @@ class MovieViewViewModel: ObservableObject {
             listMoviesModel
         } else {
             listMoviesModel.filter({$0.title.lowercased().contains(searchText.lowercased())})
-        }
-    }
-    
-    func getColumsGridItems() -> [GridItem] {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            return [
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-            ]
-        } else {
-            return [
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16),
-            ]
         }
     }
 }

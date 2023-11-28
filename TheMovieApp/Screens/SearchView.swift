@@ -10,9 +10,9 @@ import SwiftUI
 
 struct SearchView: View {
     
-    @ObservedObject var viewModel: MovieViewViewModel
+    @ObservedObject var viewModel: HomeViewViewModel
     
-    init(viewModel: MovieViewViewModel) {
+    init(viewModel: HomeViewViewModel) {
         self.viewModel = viewModel
     }
     

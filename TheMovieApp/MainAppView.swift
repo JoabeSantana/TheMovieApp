@@ -10,18 +10,18 @@ import Foundation
 
 struct MainAppView: View {
     
-    @StateObject var viewModel = MovieViewViewModel(service: MovieService())
+    @StateObject var homeViewViewModel = HomeViewViewModel(service: MovieService())
     
     let persistenceController = PersistenceController.shared
     
     var body: some View {
         TabView {
-            HomeView(viewModel: viewModel)
+            HomeView(viewModel: homeViewViewModel)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-            SearchView(viewModel: viewModel)
+            SearchView(viewModel: homeViewViewModel)
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
@@ -31,7 +31,7 @@ struct MainAppView: View {
                 }
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
-        .preferredColorScheme(.dark)
+        .colorScheme(.dark)
     }
 }
 

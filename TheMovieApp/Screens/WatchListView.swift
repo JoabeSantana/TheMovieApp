@@ -10,12 +10,12 @@ import SwiftUI
 
 struct WatchListView: View {
     
-    @State private var seachtext = ""
-    
     @Environment(\.managedObjectContext) private var viewContext
-
+    
+    @ObservedObject var viewModel = WatchListViewViewModel()
+    
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \MovieEntity.id, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \MovieEntity.title, ascending: true)],
         animation: .default)
     private var moviesEntity: FetchedResults<MovieEntity>
     
@@ -23,66 +23,57 @@ struct WatchListView: View {
     
     var body: some View {
         NavigationStack {
-            
-                VStack{
-                    List {
-                        ForEach(moviesEntity, id: \.id) { movieEntity in
-                            NavigationLink {
-                                MovieDetailView(movie: Movie(id: movieEntity.id, adult: movieEntity.adult, backdropPath: movieEntity.backdropPath, originalLanguage: movieEntity.originalLanguage, originalTitle: movieEntity.originalTitle, overview: movieEntity.overview, popularity: movieEntity.popularity, posterPath: movieEntity.posterPath, releaseDate: movieEntity.releaseDate, title: movieEntity.title, video: movieEntity.video, voteAverage: movieEntity.voteAverage, voteCount: movieEntity.voteCount))
-                            } label: {
-                                MovieCardInfoView(movie: Movie(id: movieEntity.id, adult: movieEntity.adult, backdropPath: movieEntity.backdropPath, originalLanguage: movieEntity.originalLanguage, originalTitle: movieEntity.originalTitle, overview: movieEntity.overview, popularity: movieEntity.popularity, posterPath: movieEntity.posterPath, releaseDate: movieEntity.releaseDate, title: movieEntity.title, video: movieEntity.video, voteAverage: movieEntity.voteAverage, voteCount: movieEntity.voteCount))
-                            }
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
+            VStack{
+                List {
+                    ForEach(listMovies(), id: \.id) { movieEntity in
+                        NavigationLink {
+                            MovieDetailView(movie: viewModel.getMovieFromEntity(entity: movieEntity))
+                        } label: {
+                            MovieCardInfoView(movie: viewModel.getMovieFromEntity(entity: movieEntity), viewModel: viewModel)
                         }
-                        .onDelete(perform: deleteItems)
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
                     }
-                    .listStyle(.plain)
+                    .onDelete(perform: deleteMovies)
+                }
+                .listStyle(.plain)
                 .navigationTitle("Watch List")
                 .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
-                }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity)
-                    .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
-                
-            
-        }
-        .searchable(text: $seachtext, prompt: "Search for Movies")
-    }
-    
-    var searchMoviesResults: [Movie] {
-        if(seachtext.isEmpty){
-            return movies
-        } else {
-            return movies.filter{
-                $0.title.contains(seachtext)
             }
+            .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
         }
+        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity)
+        .searchable(text: $viewModel.seachtext, prompt: "Search for Movies")
     }
     
-    private func deleteItems(offsets: IndexSet) {
+    private func deleteMovies(offsets: IndexSet) {
         withAnimation {
+            
             offsets.map { moviesEntity[$0] }.forEach(viewContext.delete)
-
+            
             do {
                 try viewContext.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
     }
-}
-
-#Preview {
-    WatchListView(movies: [Movie(id: 893723, adult: false, backdropPath: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg", originalLanguage: "en", originalTitle: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, posterPath: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", releaseDate: Date(), title: "PAW Patrol: The Mighty Movie", video: false, voteAverage: 6.928, voteCount: 125), Movie(id: 893724, adult: false, backdropPath: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg",  originalLanguage: "en", originalTitle: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, posterPath: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", releaseDate: Date(), title: "PAW Patrol: The Mighty Movie", video: false, voteAverage: 6.928, voteCount: 125)])
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-        .colorScheme(.dark)
+    
+    private func listMovies() -> FetchedResults<MovieEntity> {
+        if !viewModel.seachtext.isEmpty {
+            moviesEntity.nsPredicate = NSPredicate(format: "title CONTAINS[c] %@", viewModel.seachtext)
+        } else {
+            moviesEntity.nsPredicate = nil
+        }
+        return moviesEntity
+    }
 }
 
 struct MovieCardInfoView: View {
     
     let movie: Movie
+    var viewModel: WatchListViewViewModel
     
     var body: some View {
         HStack {
@@ -98,17 +89,23 @@ struct MovieCardInfoView: View {
                     .padding(.top)
                     .foregroundStyle(.orange)
                 Spacer()
-                Text("\(Image(systemName: "ticket")) Action")
+                Text("\(Image(systemName: "calendar")) \(viewModel.dateFormatter.string(from:  movie.releaseDate))")
                     .foregroundStyle(.white)
                 Spacer()
-                Text("\(Image(systemName: "calendar")) 2021")
+                Text("\(Image(systemName: "person.2.fill")) \(movie.voteCount)")
                     .foregroundStyle(.white)
                 Spacer()
-                Text("\(Image(systemName: "clock")) 139 minutes")
+                Text("\(Image(systemName: movie.adult ? "figure.child.and.lock.fill" : "figure.child.and.lock.open.fill")) Restriction")
                     .foregroundStyle(.white)
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }.frame(maxHeight: 170, alignment: .leading)
     }
+}
+
+#Preview {
+    WatchListView(movies: [Movie(id: 893723, adult: false, backdropPath: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg", originalLanguage: "en", originalTitle: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, posterPath: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", releaseDate: Date(), title: "PAW Patrol: The Mighty Movie", video: false, voteAverage: 6.928, voteCount: 125), Movie(id: 893724, adult: false, backdropPath: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg",  originalLanguage: "en", originalTitle: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, posterPath: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", releaseDate: Date(), title: "PAW Patrol: The Mighty Movie", video: false, voteAverage: 6.928, voteCount: 125)])
+        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        .colorScheme(.dark)
 }

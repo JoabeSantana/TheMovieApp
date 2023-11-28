@@ -9,10 +9,10 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @ObservedObject var viewModel: MovieViewViewModel
+    @ObservedObject var viewModel: HomeViewViewModel
     @Environment(\.managedObjectContext) private var viewContext
     
-    init(viewModel: MovieViewViewModel) {
+    init(viewModel: HomeViewViewModel) {
         self.viewModel = viewModel
     }
     
@@ -20,7 +20,7 @@ struct HomeView: View {
         
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: viewModel.getColumsGridItems(), spacing: 16) {
+                LazyVGrid(columns: viewModel.columsGridItems, spacing: 16) {
                     ForEach(viewModel.listMovies(), id: \.id) { movie in
                         NavigationLink {
                             MovieDetailView(movie: movie)
@@ -38,6 +38,7 @@ struct HomeView: View {
             }
             .navigationTitle("Now Playing")
         }
+        .accentColor(.white)
         .searchable(text: $viewModel.searchText , prompt: "Search for Movies")
         .onAppear(perform: {
             viewModel.fetchMovies(page: viewModel.pageService)
@@ -464,5 +465,7 @@ fileprivate final class MovieServiceMock : MovieServiceable {
 }
 
 #Preview {
-    HomeView(viewModel: MovieViewViewModel(service: MovieServiceMock()))
+    HomeView(viewModel: HomeViewViewModel(service: MovieServiceMock()))
+        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        .colorScheme(.dark)
 }

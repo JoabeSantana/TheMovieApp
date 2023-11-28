@@ -11,16 +11,19 @@ struct MovieDetailView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
-    let movie: Movie
-    @State private var aboutMenu = true
-    @State private var reviewsMenu = false
-    @State private var castMenu = false
+    @ObservedObject var viewModel = MovieDetailViewViewModel()
     
-    let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        return dateFormatter
-    }()
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \MovieEntity.id, ascending: true)],
+        predicate: nil,
+        animation: .default)
+    var moviesEntity: FetchedResults<MovieEntity>
+    
+    let movie: Movie
+    
+    init(movie: Movie) {
+        self.movie = movie
+    }
     
     var body: some View {
         ScrollView {
@@ -38,24 +41,22 @@ struct MovieDetailView: View {
                 .offset(x: 0, y: -95)
                 
                 
-                HStack(alignment: .center){
-                    Text("\(Image(systemName: "calendar")) \(dateFormatter.string(from:  movie.releaseDate))")
-                    Text("|")
-                    Text("\(Image(systemName: movie.adult ? "figure.child.and.lock.fill" : "figure.child.and.lock.open.fill")) Restriction")
-                }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
-                    .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
-                    .foregroundStyle(Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255))
+                DetailsAboutMovie(movie: movie, viewModel: viewModel)
+                    .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                        .padding(EdgeInsets(top: 20, leading: 10, bottom: 0, trailing: 10))
+                        .foregroundStyle(Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255))
+                
                 VStack {
                     HStack {
                         Button {
-                            aboutMenu = true
-                            reviewsMenu = false
-                            castMenu = false
+                            viewModel.aboutMenu = true
+                            viewModel.reviewsMenu = false
+                            viewModel.castMenu = false
                         } label: {
                             VStack {
                                 Text("About Movie")
                                     .font(.headline)
-                                if(aboutMenu){
+                                if(viewModel.aboutMenu){
                                     Rectangle()
                                         .frame(maxHeight: 5)
                                         .foregroundStyle(Color(red: 58.0/255, green: 63.0/255, blue: 71.0/255))
@@ -68,14 +69,14 @@ struct MovieDetailView: View {
                         }
                         Spacer()
                         Button {
-                            aboutMenu = false
-                            reviewsMenu = true
-                            castMenu = false
+                            viewModel.aboutMenu = false
+                            viewModel.reviewsMenu = true
+                            viewModel.castMenu = false
                         } label: {
                             VStack {
                                 Text("Reviews")
                                     .font(.headline)
-                                if(reviewsMenu){
+                                if(viewModel.reviewsMenu){
                                     Rectangle()
                                         .frame(maxHeight: 5)
                                         .foregroundStyle(Color(red: 58.0/255, green: 63.0/255, blue: 71.0/255))
@@ -89,14 +90,14 @@ struct MovieDetailView: View {
                         }
                         Spacer()
                         Button {
-                            aboutMenu = false
-                            reviewsMenu = false
-                            castMenu = true
+                            viewModel.aboutMenu = false
+                            viewModel.reviewsMenu = false
+                            viewModel.castMenu = true
                         } label: {
                             VStack {
                                 Text("Cast")
                                     .font(.headline)
-                                if(castMenu){
+                                if(viewModel.castMenu){
                                     Rectangle()
                                         .frame(maxHeight: 5)
                                         .foregroundStyle(Color(red: 58.0/255, green: 63.0/255, blue: 71.0/255))
@@ -111,46 +112,55 @@ struct MovieDetailView: View {
                     }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
                     
-                    if aboutMenu {
+                    if viewModel.aboutMenu {
                         Text("\(movie.overview)")
                             .foregroundStyle(.white)
-                    } else if reviewsMenu {
+                    } else if viewModel.reviewsMenu {
                         Text("Building...")
                             .foregroundStyle(.white)
                     } else {
-                        Text("\(movie.overview)")
+                        Text("Building...")
                             .foregroundStyle(.white)
                     }
-                    
-                    
-                }.padding()
+                }
+                    .padding()
             })
             .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .topLeading)
             .foregroundColor(.white)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing){
-                    Button("\(Image(systemName: "bookmark"))"){
-                        addMovie(movie: movie)
-                    }
+                    Button(viewModel.isFavorite ? "\(Image(systemName: "bookmark.fill"))" : "\(Image(systemName: "bookmark"))"){
+                        if viewModel.isFavorite {
+                            deleteMovie(movie: movie)
+                        } else {
+                            addMovie(movie: movie)
+                        }
+                    }.foregroundColor(.white)
                 }
             }
+            
         }
+        .onAppear(perform: {
+            viewModel.checkFavorite(movie: movie, moviesEntity: moviesEntity)
+        })
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Detail")
         .background(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
     }
-    
+}
+
+extension MovieDetailView {
     private func addMovie(movie: Movie) {
         withAnimation {
             let movieEntity = MovieEntity(context: viewContext)
             movieEntity.id = movie.id
             movieEntity.adult = movie.adult
-            movieEntity.backdropPath = ImageUtil.getImageUrl(path: movie.backdropPath)
+            movieEntity.backdropPath = movie.backdropPath
             movieEntity.originalLanguage = movie.originalLanguage
             movieEntity.originalTitle = movie.originalTitle
             movieEntity.overview = movie.overview
             movieEntity.popularity = movie.popularity
-            movieEntity.posterPath = ImageUtil.getImageUrl(path: movie.posterPath)
+            movieEntity.posterPath = movie.posterPath
             movieEntity.releaseDate = movie.releaseDate
             movieEntity.title = movie.title
             movieEntity.video = movie.video
@@ -159,10 +169,26 @@ struct MovieDetailView: View {
 
             do {
                 try viewContext.save()
+                viewModel.isFavorite.toggle()
             } catch {
                 print(error)
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    
+    private func deleteMovie(movie: Movie) {
+        withAnimation {
+            for movieResult in moviesEntity {
+                if movie.id == movieResult.id {
+                    viewContext.delete(movieResult)
+                }
+            }
+            do {
+                try viewContext.save()
+                viewModel.isFavorite.toggle()
+            } catch {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
@@ -170,58 +196,23 @@ struct MovieDetailView: View {
     }
 }
 
-struct PosterImageTitleView : View {
+struct DetailsAboutMovie: View {
     
     let movie: Movie
+    var viewModel: MovieDetailViewViewModel
     
     var body: some View {
-        HStack(alignment: .bottom) {
-            
-            NavigationStack {
-                NavigationLink {
-                    FullImageView(url: ImageUtil.getImageUrl(path: movie.posterPath, original: true))
-                        .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
-                } label: {
-                    PosterImageView(imageUrl: ImageUtil.getImageUrl(path: movie.posterPath))
-                        .overlay(RoundedRectangle(cornerRadius: 20)
-                            .stroke(.orange, lineWidth: 2))
-                }
-
-            }
-            
-            VStack() {
-                Text(movie.title)
-                    .font(.system(size: 24))
-                    .bold()
-                    .foregroundStyle(.white)
-                    .lineLimit(2)
-            }
-            .frame(maxWidth: .infinity, maxHeight: 75, alignment: .leading)
-            
+        HStack(alignment: .center){
+            Text("\(Image(systemName: "calendar")) \(viewModel.dateFormatter.string(from:  movie.releaseDate)) | \(Image(systemName: "person.2.fill")) \(movie.voteCount) | \(Image(systemName: movie.adult ? "figure.child.and.lock.fill" : "figure.child.and.lock.open.fill")) Age")
         }
     }
 }
+
 
 #Preview {
     NavigationStack {
-        MovieDetailView(movie: Movie(id: 893723, adult: false, backdropPath: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg",  originalLanguage: "en", originalTitle: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, posterPath: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", releaseDate: Date(), title: "PAW Patrol: The Mighty Movie", video: false, voteAverage: 6.928, voteCount: 125))
+        MovieDetailView(movie: Movie(id: 1, adult: false, backdropPath: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg",  originalLanguage: "en", originalTitle: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, posterPath: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", releaseDate: Date(), title: "PAW Patrol: The Mighty Movie", video: false, voteAverage: 6.928, voteCount: 1025))
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
-}
-
-struct FullImageView: View {
-    
-    let url: String
-    
-    var body: some View {
-        VStack {
-            AsyncImage(url: URL(string: url)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            } placeholder: {
-                ProgressView()
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
+    .colorScheme(.dark)
 }

@@ -1,4 +1,4 @@
-# SwiftUI App to consume TMDB Api - MVVM
+# SwiftUI App to consume TMDB API - MVVM
 
 A SwiftUI iOS project using MVVM design pattern to show Movies that is now playing and their information.
 

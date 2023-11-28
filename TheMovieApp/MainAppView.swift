@@ -21,10 +21,6 @@ struct MainAppView: View {
                     Label("Home", systemImage: "house")
                 }
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-            SearchView(viewModel: homeViewViewModel)
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
-                }
             WatchListView()
                 .tabItem {
                     Label("Watch List", systemImage: "bookmark")

@@ -16,7 +16,7 @@ struct VoteAverageView: View {
             Spacer()
             Text("\(Image(systemName: "star")) \(voteAverage, specifier: "%.2f")")
                 .padding(EdgeInsets(top: 8, leading: 15, bottom: 8, trailing: 15))
-                .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
+                .background(ColorUtil.primaryColor)
                 .clipShape(.capsule)
                 .foregroundStyle(.orange)
                 .bold()

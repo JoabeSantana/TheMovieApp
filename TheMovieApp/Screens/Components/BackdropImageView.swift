@@ -16,7 +16,7 @@ struct BackdropImageView: View {
     var bottomTrailingRadius: CGFloat = 0
     var topTrailingRadius: CGFloat = 0
     
-    private let colorTemplate = Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255)
+    private let templateColor = ColorUtil.templateColor
     
     var body: some View {
         ZStack {
@@ -32,7 +32,7 @@ struct BackdropImageView: View {
                         Image("BackdropTemplate")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .background(colorTemplate)
+                            .background(templateColor)
                             .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
                         ProgressView().frame(maxWidth: 10, maxHeight: 10)
                     }
@@ -41,7 +41,7 @@ struct BackdropImageView: View {
                         Image("BackdropTemplate")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .background(colorTemplate)
+                            .background(templateColor)
                             .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
                         Image(systemName: "rectangle.slash")
                             .foregroundStyle(.white)
@@ -50,7 +50,7 @@ struct BackdropImageView: View {
                     Image("BackdropTemplate")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .background(colorTemplate)
+                        .background(templateColor)
                         .roundedCorners(topLeadingRadius: topLeadingRadius, bottomLeadingRadius: bottomLeadingRadius, bottomTrailingRadius: bottomTrailingRadius, topTrailingRadius: topTrailingRadius)
                 }
             }

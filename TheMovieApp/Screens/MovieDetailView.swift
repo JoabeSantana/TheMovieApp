@@ -44,7 +44,7 @@ struct MovieDetailView: View {
                 DetailsAboutMovie(movie: movie, viewModel: viewModel)
                     .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
                         .padding(EdgeInsets(top: 20, leading: 10, bottom: 0, trailing: 10))
-                        .foregroundStyle(Color(red: 146.0/255, green: 146.0/255, blue: 157.0/255))
+                        .foregroundStyle(ColorUtil.secondaryColor)
                 
                 VStack {
                     HStack {
@@ -59,11 +59,11 @@ struct MovieDetailView: View {
                                 if(viewModel.aboutMenu){
                                     Rectangle()
                                         .frame(maxHeight: 5)
-                                        .foregroundStyle(Color(red: 58.0/255, green: 63.0/255, blue: 71.0/255))
+                                        .foregroundStyle(ColorUtil.tabItemColor)
                                 } else {
                                     Rectangle()
                                         .frame(maxHeight: 5)
-                                        .foregroundStyle(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
+                                        .foregroundStyle(ColorUtil.transparentColor)
                                 }
                             }
                         }
@@ -79,11 +79,11 @@ struct MovieDetailView: View {
                                 if(viewModel.reviewsMenu){
                                     Rectangle()
                                         .frame(maxHeight: 5)
-                                        .foregroundStyle(Color(red: 58.0/255, green: 63.0/255, blue: 71.0/255))
+                                        .foregroundStyle(ColorUtil.tabItemColor)
                                 } else {
                                     Rectangle()
                                         .frame(maxHeight: 5)
-                                        .foregroundStyle(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
+                                        .foregroundStyle(ColorUtil.transparentColor)
                                 }
                                 
                             }
@@ -100,11 +100,11 @@ struct MovieDetailView: View {
                                 if(viewModel.castMenu){
                                     Rectangle()
                                         .frame(maxHeight: 5)
-                                        .foregroundStyle(Color(red: 58.0/255, green: 63.0/255, blue: 71.0/255))
+                                        .foregroundStyle(ColorUtil.tabItemColor)
                                 } else {
                                     Rectangle()
                                         .frame(maxHeight: 5)
-                                        .foregroundStyle(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
+                                        .foregroundStyle(ColorUtil.transparentColor)
                                 }
                                 
                             }
@@ -145,7 +145,6 @@ struct MovieDetailView: View {
         })
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Detail")
-        .background(Color(red: 37.0/255, green: 40.0/255, blue: 54.0/255))
     }
 }
 

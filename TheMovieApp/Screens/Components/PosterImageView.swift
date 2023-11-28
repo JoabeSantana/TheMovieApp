@@ -11,7 +11,7 @@ struct PosterImageView: View {
     
     let imageUrl: String
     
-    private let colorTemplate = Color(red: 57.0/255, green: 59.0/255, blue: 70.0/255)
+    private let templateColor = ColorUtil.templateColor
     
     var body: some View {
         AsyncImage(url: URL(string: imageUrl)) { imagePhase in
@@ -26,7 +26,7 @@ struct PosterImageView: View {
                     Image("PosterTemplate")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .background(colorTemplate)
+                        .background(templateColor)
                         .roundedCorners()
                     ProgressView().frame(maxWidth: 10)
                 }
@@ -35,7 +35,7 @@ struct PosterImageView: View {
                     Image("PosterTemplate")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .background(colorTemplate)
+                        .background(templateColor)
                     .roundedCorners()
                     Image(systemName: "rectangle.slash")
                         .foregroundStyle(.white)
@@ -44,7 +44,7 @@ struct PosterImageView: View {
                 Image("PosterTemplate")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .background(colorTemplate)
+                    .background(templateColor)
                     .roundedCorners()
             }
         }

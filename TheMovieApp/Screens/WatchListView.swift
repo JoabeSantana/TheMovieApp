@@ -32,7 +32,7 @@ struct WatchListView: View {
                             MovieCardInfoView(movie: viewModel.getMovieFromEntity(entity: movieEntity), viewModel: viewModel)
                         }
                         .listRowSeparator(.hidden)
-                        .listRowBackground(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
+                        .listRowBackground(ColorUtil.primaryColor)
                     }
                     .onDelete(perform: deleteMovies)
                 }
@@ -40,7 +40,7 @@ struct WatchListView: View {
                 .navigationTitle("Watch List")
                 .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
             }
-            .background(Color(red: 36.0/255, green: 42.0/255, blue: 50.0/255))
+            .background(ColorUtil.primaryColor)
         }
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity)
         .searchable(text: $viewModel.seachtext, prompt: "Search for Movies")

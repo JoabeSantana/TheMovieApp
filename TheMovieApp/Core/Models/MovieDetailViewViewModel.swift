@@ -18,7 +18,7 @@ class MovieDetailViewViewModel: ObservableObject {
     
     let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
+        dateFormatter.dateFormat = "yyyy"
         return dateFormatter
     }()
     

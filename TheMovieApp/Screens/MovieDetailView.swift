@@ -54,7 +54,7 @@ struct MovieDetailView: View {
                             viewModel.castMenu = false
                         } label: {
                             VStack {
-                                Text("About Movie")
+                                Text("about-label")
                                     .font(.headline)
                                 if(viewModel.aboutMenu){
                                     Rectangle()
@@ -74,7 +74,7 @@ struct MovieDetailView: View {
                             viewModel.castMenu = false
                         } label: {
                             VStack {
-                                Text("Reviews")
+                                Text("reviews-label")
                                     .font(.headline)
                                 if(viewModel.reviewsMenu){
                                     Rectangle()
@@ -95,7 +95,7 @@ struct MovieDetailView: View {
                             viewModel.castMenu = true
                         } label: {
                             VStack {
-                                Text("Cast")
+                                Text("cast-label")
                                     .font(.headline)
                                 if(viewModel.castMenu){
                                     Rectangle()
@@ -116,10 +116,10 @@ struct MovieDetailView: View {
                         Text("\(movie.overview)")
                             .foregroundStyle(.white)
                     } else if viewModel.reviewsMenu {
-                        Text("Building...")
+                        Text("building-label")
                             .foregroundStyle(.white)
                     } else {
-                        Text("Building...")
+                        Text("building-label")
                             .foregroundStyle(.white)
                     }
                 }
@@ -144,7 +144,7 @@ struct MovieDetailView: View {
             viewModel.checkFavorite(movie: movie, moviesEntity: moviesEntity)
         })
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Detail")
+        .navigationTitle("detail-title")
     }
 }
 
@@ -202,7 +202,8 @@ struct DetailsAboutMovie: View {
     
     var body: some View {
         HStack(alignment: .center){
-            Text("\(Image(systemName: "calendar")) \(viewModel.dateFormatter.string(from:  movie.releaseDate)) | \(Image(systemName: "person.2.fill")) \(movie.voteCount) | \(Image(systemName: movie.adult ? "figure.child.and.lock.fill" : "figure.child.and.lock.open.fill")) Age")
+            Text("\(Image(systemName: "calendar")) \(viewModel.dateFormatter.string(from:  movie.releaseDate)) | \(Image(systemName: "person.2.fill")) \(movie.voteCount) | \(Image(systemName: movie.adult ? "figure.child.and.lock.fill" : "figure.child.and.lock.open.fill"))")
+            Text("age-label")
         }
     }
 }

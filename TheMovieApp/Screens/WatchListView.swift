@@ -37,13 +37,13 @@ struct WatchListView: View {
                     .onDelete(perform: deleteMovies)
                 }
                 .listStyle(.plain)
-                .navigationTitle("Watch List")
+                .navigationTitle("watchlist-title")
                 .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
             }
             .background(ColorUtil.primaryColor)
         }
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity)
-        .searchable(text: $viewModel.seachtext, prompt: "Search for Movies")
+        .searchable(text: $viewModel.seachtext, prompt: "search-label")
     }
     
     private func deleteMovies(offsets: IndexSet) {
@@ -95,7 +95,10 @@ struct MovieCardInfoView: View {
                 Text("\(Image(systemName: "person.2.fill")) \(movie.voteCount)")
                     .foregroundStyle(.white)
                 Spacer()
-                Text("\(Image(systemName: movie.adult ? "figure.child.and.lock.fill" : "figure.child.and.lock.open.fill")) Restriction")
+                HStack{
+                    Text("\(Image(systemName: movie.adult ? "figure.child.and.lock.fill" : "figure.child.and.lock.open.fill"))")
+                    Text("age-label")
+                }
                     .foregroundStyle(.white)
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
             }

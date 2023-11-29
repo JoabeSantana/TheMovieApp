@@ -36,10 +36,10 @@ struct HomeView: View {
                     }
                 }.padding()
             }
-            .navigationTitle("Now Playing")
+            .navigationTitle("home-title")
         }
         .accentColor(.white)
-        .searchable(text: $viewModel.searchText , prompt: "Search for Movies")
+        .searchable(text: $viewModel.searchText , prompt: "search-label")
         .onAppear(perform: {
             viewModel.fetchMovies(page: viewModel.pageService)
         })

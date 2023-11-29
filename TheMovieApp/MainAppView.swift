@@ -18,12 +18,12 @@ struct MainAppView: View {
         TabView {
             HomeView(viewModel: homeViewViewModel)
                 .tabItem {
-                    Label("Home", systemImage: "house")
+                    Label("home-title", systemImage: "house")
                 }
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
             WatchListView()
                 .tabItem {
-                    Label("Watch List", systemImage: "bookmark")
+                    Label("watchlist-title", systemImage: "bookmark")
                 }
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }

@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  TheMovieApp
+
+  Created by Joabe Santana Correia on 28/11/23.
+  
+*/
+"about-label" = "Sobre";
+"age-label" = "Idade";
+"building-label" = "Em construção...";
+"cast-label" = "Elenco";
+"detail-title" = "Detalhes";
+"home-title" = "Em Cartaz";
+"reviews-label" = "Avaliações";
+"search-label" = "Busque por um filme";
+"watchlist-title" = "Favoritos";

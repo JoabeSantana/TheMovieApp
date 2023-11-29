@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  TheMovieApp
+
+  Created by Joabe Santana Correia on 28/11/23.
+  
+*/
+"about-label" = "About";
+"age-label" = "Age";
+"building-label" = "Building...";
+"cast-label" = "Cast";
+"detail-title" = "Detail";
+"home-title" = "Now Playing";
+"reviews-label" = "Reviews";
+"search-label" = "Search for a movie";
+"watchlist-title" = "Watchlist";

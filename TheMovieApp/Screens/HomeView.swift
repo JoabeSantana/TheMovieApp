@@ -17,26 +17,29 @@ struct HomeView: View {
     }
     
     var body: some View {
-        
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: viewModel.columsGridItems, spacing: 16) {
-                    ForEach(viewModel.listMovies(), id: \.id) { movie in
-                        NavigationLink {
-                            MovieDetailView(movie: movie)
-                                .environment(\.managedObjectContext, viewContext)
-                        } label: {
-                            MovieCard(movie: movie)
-                                .onAppear(perform: {
-                                    if movie.id == viewModel.lastMovieId && viewModel.pageService <= viewModel.maxPagesService {
-                                        viewModel.fetchMovies(page: viewModel.pageService)
-                                    }
-                                })
+            ZStack {
+                Color(.primaryApp)
+                    .ignoresSafeArea()
+                ScrollView {
+                    LazyVGrid(columns: viewModel.columsGridItems, spacing: 16) {
+                        ForEach(viewModel.listMovies(), id: \.id) { movie in
+                            NavigationLink {
+                                MovieDetailView(movie: movie)
+                                    .environment(\.managedObjectContext, viewContext)
+                            } label: {
+                                MovieCard(movie: movie)
+                                    .onAppear(perform: {
+                                        if movie.id == viewModel.lastMovieId && viewModel.pageService <= viewModel.maxPagesService {
+                                            viewModel.fetchMovies(page: viewModel.pageService)
+                                        }
+                                    })
+                            }
                         }
-                    }
-                }.padding()
+                    }.padding()
+                }
+                .navigationTitle("home-title")
             }
-            .navigationTitle("home-title")
         }
         .accentColor(.white)
         .searchable(text: $viewModel.searchText , prompt: "search-label")

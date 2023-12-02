@@ -11,7 +11,7 @@ struct PosterImageView: View {
     
     let imageUrl: String
     
-    private let templateColor = ColorUtil.templateColor
+    private let templateColor = Color(.templateApp)
     
     var body: some View {
         AsyncImage(url: URL(string: imageUrl)) { imagePhase in
@@ -49,4 +49,8 @@ struct PosterImageView: View {
             }
         }
     }
+}
+
+#Preview {
+    PosterImageView(imageUrl: "")
 }

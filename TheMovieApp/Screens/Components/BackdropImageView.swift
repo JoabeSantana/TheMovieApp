@@ -16,7 +16,7 @@ struct BackdropImageView: View {
     var bottomTrailingRadius: CGFloat = 0
     var topTrailingRadius: CGFloat = 0
     
-    private let templateColor = ColorUtil.templateColor
+    private let templateColor = Color(.templateApp)
     
     var body: some View {
         ZStack {

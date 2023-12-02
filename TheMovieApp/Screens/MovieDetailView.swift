@@ -26,38 +26,41 @@ struct MovieDetailView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, content: {
-                
-                BackdropImageView(imageUrl: ImageUtil.getImageUrl(path: movie.backdropPath, original: true), bottomLeadingRadius: 20, bottomTrailingRadius: 20)
-                
-                VoteAverageView(voteAverage: movie.voteAverage)
-                
-                PosterImageTitleView(movie: movie)
-                
-                DetailsAboutMovie(movie: movie, viewModel: viewModel)
-                
-                InfoMovieView(movie: movie, aboutMenu: $viewModel.aboutMenu, reviewsMenu: $viewModel.reviewsMenu,
-                castMenu: $viewModel.castMenu)
-            })
-            .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .topLeading)
-            .foregroundColor(.white)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing){
-                    Button(viewModel.isFavorite ? "\(Image(systemName: "bookmark.fill"))" : "\(Image(systemName: "bookmark"))"){
-                        if viewModel.isFavorite {
-                            deleteMovie(movie: movie)
-                        } else {
-                            addMovie(movie: movie)
-                        }
-                    }.foregroundColor(.white)
+        ZStack {
+            Color(.primaryApp)
+                .ignoresSafeArea()
+            ScrollView {
+                VStack(alignment: .leading, content: {
+                    
+                    BackdropImageView(imageUrl: ImageUtil.getImageUrl(path: movie.backdropPath, original: true), bottomLeadingRadius: 20, bottomTrailingRadius: 20)
+                    
+                    VoteAverageView(voteAverage: movie.voteAverage)
+                    
+                    PosterImageTitleView(movie: movie)
+                    
+                    DetailsAboutMovie(movie: movie, viewModel: viewModel)
+                    
+                    InfoMovieView(movie: movie, aboutMenu: $viewModel.aboutMenu, reviewsMenu: $viewModel.reviewsMenu,
+                                  castMenu: $viewModel.castMenu)
+                })
+                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .topLeading)
+                .foregroundColor(.white)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing){
+                        Button(viewModel.isFavorite ? "\(Image(systemName: "bookmark.fill"))" : "\(Image(systemName: "bookmark"))"){
+                            if viewModel.isFavorite {
+                                deleteMovie(movie: movie)
+                            } else {
+                                addMovie(movie: movie)
+                            }
+                        }.foregroundColor(.white)
+                    }
                 }
             }
-            
+            .onAppear(perform: {
+                viewModel.checkFavorite(movie: movie, moviesEntity: moviesEntity)
+            })
         }
-        .onAppear(perform: {
-            viewModel.checkFavorite(movie: movie, moviesEntity: moviesEntity)
-        })
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("detail-title")
     }
@@ -122,7 +125,7 @@ struct DetailsAboutMovie: View {
         }
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
         .padding(EdgeInsets(top: 20, leading: 10, bottom: 0, trailing: 10))
-        .foregroundStyle(ColorUtil.secondaryColor)
+        .foregroundStyle(.secondaryApp)
     }
 }
 
@@ -147,11 +150,11 @@ struct InfoMovieView: View {
                         if(aboutMenu){
                             Rectangle()
                                 .frame(maxHeight: 5)
-                                .foregroundStyle(ColorUtil.tabItemColor)
+                                .foregroundStyle(.tabItem)
                         } else {
                             Rectangle()
                                 .frame(maxHeight: 5)
-                                .foregroundStyle(ColorUtil.transparentColor)
+                                .foregroundStyle(.transparentApp)
                         }
                     }
                 }
@@ -167,11 +170,11 @@ struct InfoMovieView: View {
                         if(reviewsMenu){
                             Rectangle()
                                 .frame(maxHeight: 5)
-                                .foregroundStyle(ColorUtil.tabItemColor)
+                                .foregroundStyle(.tabItem)
                         } else {
                             Rectangle()
                                 .frame(maxHeight: 5)
-                                .foregroundStyle(ColorUtil.transparentColor)
+                                .foregroundStyle(.transparentApp)
                         }
                         
                     }
@@ -188,11 +191,11 @@ struct InfoMovieView: View {
                         if(castMenu){
                             Rectangle()
                                 .frame(maxHeight: 5)
-                                .foregroundStyle(ColorUtil.tabItemColor)
+                                .foregroundStyle(.tabItem)
                         } else {
                             Rectangle()
                                 .frame(maxHeight: 5)
-                                .foregroundStyle(ColorUtil.transparentColor)
+                                .foregroundStyle(.transparentApp)
                         }
                         
                     }

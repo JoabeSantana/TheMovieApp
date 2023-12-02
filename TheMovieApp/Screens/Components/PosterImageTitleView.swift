@@ -16,7 +16,7 @@ struct PosterImageTitleView : View {
             NavigationStack {
                 NavigationLink {
                     FullImageView(url: ImageUtil.getImageUrl(path: movie.posterPath, original: true))
-                        .background(ColorUtil.primaryColor)
+                        
                 } label: {
                     PosterImageView(imageUrl: ImageUtil.getImageUrl(path: movie.posterPath))
                         .overlay(RoundedRectangle(cornerRadius: 20)

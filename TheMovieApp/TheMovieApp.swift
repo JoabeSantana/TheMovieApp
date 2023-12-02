@@ -12,7 +12,7 @@ struct TheMovieApp: App {
     
     init(){
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
-        UIScrollView.appearance().backgroundColor = UIColor(ColorUtil.primaryColor)
+        //UIScrollView.appearance().backgroundColor = UIColor(ColorUtil.primaryColor)
     }
     
     var body: some Scene {

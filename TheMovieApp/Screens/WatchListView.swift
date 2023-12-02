@@ -23,26 +23,30 @@ struct WatchListView: View {
     
     var body: some View {
         NavigationStack {
-            VStack{
-                List {
-                    ForEach(listMovies(), id: \.id) { movieEntity in
-                        NavigationLink {
-                            MovieDetailView(movie: viewModel.getMovieFromEntity(entity: movieEntity))
-                        } label: {
-                            MovieCardInfoView(movie: viewModel.getMovieFromEntity(entity: movieEntity), viewModel: viewModel)
+            ZStack {
+                Color(.primaryApp)
+                    .ignoresSafeArea()
+                VStack{
+                    List {
+                        ForEach(listMovies(), id: \.id) { movieEntity in
+                            NavigationLink {
+                                MovieDetailView(movie: viewModel.getMovieFromEntity(entity: movieEntity))
+                            } label: {
+                                MovieCardInfoView(movie: viewModel.getMovieFromEntity(entity: movieEntity), viewModel: viewModel)
+                            }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color(.primaryApp))
                         }
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(ColorUtil.primaryColor)
+                        .onDelete(perform: deleteMovies)
                     }
-                    .onDelete(perform: deleteMovies)
+                    .listStyle(.plain)
+                    .navigationTitle("watchlist-title")
+                    .frame(maxWidth: .infinity)
                 }
-                .listStyle(.plain)
-                .navigationTitle("watchlist-title")
-                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
             }
-            .background(ColorUtil.primaryColor)
+            //.background(.accent)
         }
-        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .searchable(text: $viewModel.seachtext, prompt: "search-label")
     }
     

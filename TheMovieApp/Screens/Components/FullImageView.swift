@@ -22,5 +22,6 @@ struct FullImageView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.primaryApp))
     }
 }

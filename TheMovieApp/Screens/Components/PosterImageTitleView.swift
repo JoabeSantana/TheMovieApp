@@ -13,7 +13,6 @@ struct PosterImageTitleView : View {
     
     var body: some View {
         HStack(alignment: .bottom) {
-            
             NavigationStack {
                 NavigationLink {
                     FullImageView(url: ImageUtil.getImageUrl(path: movie.posterPath, original: true))
@@ -36,6 +35,9 @@ struct PosterImageTitleView : View {
             .frame(maxWidth: .infinity, maxHeight: 75, alignment: .leading)
             
         }
+        .frame(maxWidth: .infinity, maxHeight: 150, alignment: .top)
+        .padding(EdgeInsets(top: 0, leading: 30, bottom: -95, trailing: 30))
+        .offset(x: 0, y: -95)
     }
 }
 

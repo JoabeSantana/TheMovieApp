@@ -32,19 +32,10 @@ struct MovieDetailView: View {
                 BackdropImageView(imageUrl: ImageUtil.getImageUrl(path: movie.backdropPath, original: true), bottomLeadingRadius: 20, bottomTrailingRadius: 20)
                 
                 VoteAverageView(voteAverage: movie.voteAverage)
-                    .padding(EdgeInsets(top: 0, leading: 10, bottom: -60, trailing: 5))
-                    .offset(x: 0, y: -51)
                 
                 PosterImageTitleView(movie: movie)
-                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: 150, alignment: .top)
-                .padding(EdgeInsets(top: 0, leading: 30, bottom: -95, trailing: 30))
-                .offset(x: 0, y: -95)
-                
                 
                 DetailsAboutMovie(movie: movie, viewModel: viewModel)
-                    .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
-                        .padding(EdgeInsets(top: 20, leading: 10, bottom: 0, trailing: 10))
-                        .foregroundStyle(ColorUtil.secondaryColor)
                 
                 InfoMovieView(movie: movie, aboutMenu: $viewModel.aboutMenu, reviewsMenu: $viewModel.reviewsMenu,
                 castMenu: $viewModel.castMenu)
@@ -129,16 +120,10 @@ struct DetailsAboutMovie: View {
             Text("\(Image(systemName: "calendar")) \(viewModel.dateFormatter.string(from:  movie.releaseDate)) | \(Image(systemName: "person.2.fill")) \(movie.voteCount) | \(Image(systemName: movie.adult ? "figure.child.and.lock.fill" : "figure.child.and.lock.open.fill"))")
             Text("age-label")
         }
+        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+        .padding(EdgeInsets(top: 20, leading: 10, bottom: 0, trailing: 10))
+        .foregroundStyle(ColorUtil.secondaryColor)
     }
-}
-
-
-#Preview {
-    NavigationStack {
-        MovieDetailView(movie: Movie(id: 1, adult: false, backdropPath: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg",  originalLanguage: "en", originalTitle: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, posterPath: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", releaseDate: Date(), title: "PAW Patrol: The Mighty Movie", video: false, voteAverage: 6.928, voteCount: 1025))
-            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
-    .colorScheme(.dark)
 }
 
 struct InfoMovieView: View {
@@ -228,4 +213,12 @@ struct InfoMovieView: View {
         }
         .padding()
     }
+}
+
+#Preview {
+    NavigationStack {
+        MovieDetailView(movie: Movie(id: 1, adult: false, backdropPath: "https://image.tmdb.org/t/p/w500/zgQQF04u3OgNBJqClRNby1FPz9s.jpg",  originalLanguage: "en", originalTitle: "PAW Patrol: The Mighty Movie", overview: "A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.", popularity: 623.827, posterPath: "https://image.tmdb.org/t/p/w500/aTvePCU7exLepwg5hWySjwxojQK.jpg", releaseDate: Date(), title: "PAW Patrol: The Mighty Movie", video: false, voteAverage: 6.928, voteCount: 1025))
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+    .colorScheme(.dark)
 }

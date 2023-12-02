@@ -21,6 +21,8 @@ struct VoteAverageView: View {
                 .foregroundStyle(.orange)
                 .bold()
         }
+        .padding(EdgeInsets(top: 0, leading: 10, bottom: -60, trailing: 5))
+        .offset(x: 0, y: -51)
     }
 }
 

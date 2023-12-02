@@ -46,84 +46,8 @@ struct MovieDetailView: View {
                         .padding(EdgeInsets(top: 20, leading: 10, bottom: 0, trailing: 10))
                         .foregroundStyle(ColorUtil.secondaryColor)
                 
-                VStack {
-                    HStack {
-                        Button {
-                            viewModel.aboutMenu = true
-                            viewModel.reviewsMenu = false
-                            viewModel.castMenu = false
-                        } label: {
-                            VStack {
-                                Text("about-label")
-                                    .font(.headline)
-                                if(viewModel.aboutMenu){
-                                    Rectangle()
-                                        .frame(maxHeight: 5)
-                                        .foregroundStyle(ColorUtil.tabItemColor)
-                                } else {
-                                    Rectangle()
-                                        .frame(maxHeight: 5)
-                                        .foregroundStyle(ColorUtil.transparentColor)
-                                }
-                            }
-                        }
-                        Spacer()
-                        Button {
-                            viewModel.aboutMenu = false
-                            viewModel.reviewsMenu = true
-                            viewModel.castMenu = false
-                        } label: {
-                            VStack {
-                                Text("reviews-label")
-                                    .font(.headline)
-                                if(viewModel.reviewsMenu){
-                                    Rectangle()
-                                        .frame(maxHeight: 5)
-                                        .foregroundStyle(ColorUtil.tabItemColor)
-                                } else {
-                                    Rectangle()
-                                        .frame(maxHeight: 5)
-                                        .foregroundStyle(ColorUtil.transparentColor)
-                                }
-                                
-                            }
-                        }
-                        Spacer()
-                        Button {
-                            viewModel.aboutMenu = false
-                            viewModel.reviewsMenu = false
-                            viewModel.castMenu = true
-                        } label: {
-                            VStack {
-                                Text("cast-label")
-                                    .font(.headline)
-                                if(viewModel.castMenu){
-                                    Rectangle()
-                                        .frame(maxHeight: 5)
-                                        .foregroundStyle(ColorUtil.tabItemColor)
-                                } else {
-                                    Rectangle()
-                                        .frame(maxHeight: 5)
-                                        .foregroundStyle(ColorUtil.transparentColor)
-                                }
-                                
-                            }
-                        }
-                    }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
-                    
-                    if viewModel.aboutMenu {
-                        Text("\(movie.overview)")
-                            .foregroundStyle(.white)
-                    } else if viewModel.reviewsMenu {
-                        Text("building-label")
-                            .foregroundStyle(.white)
-                    } else {
-                        Text("building-label")
-                            .foregroundStyle(.white)
-                    }
-                }
-                    .padding()
+                InfoMovieView(movie: movie, aboutMenu: $viewModel.aboutMenu, reviewsMenu: $viewModel.reviewsMenu,
+                castMenu: $viewModel.castMenu)
             })
             .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .topLeading)
             .foregroundColor(.white)
@@ -215,4 +139,93 @@ struct DetailsAboutMovie: View {
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
     .colorScheme(.dark)
+}
+
+struct InfoMovieView: View {
+    
+    let movie: Movie
+    @Binding var aboutMenu: Bool
+    @Binding var reviewsMenu: Bool
+    @Binding var castMenu: Bool
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Button {
+                    aboutMenu = true
+                    reviewsMenu = false
+                    castMenu = false
+                } label: {
+                    VStack {
+                        Text("about-label")
+                            .font(.headline)
+                        if(aboutMenu){
+                            Rectangle()
+                                .frame(maxHeight: 5)
+                                .foregroundStyle(ColorUtil.tabItemColor)
+                        } else {
+                            Rectangle()
+                                .frame(maxHeight: 5)
+                                .foregroundStyle(ColorUtil.transparentColor)
+                        }
+                    }
+                }
+                Spacer()
+                Button {
+                    aboutMenu = false
+                    reviewsMenu = true
+                    castMenu = false
+                } label: {
+                    VStack {
+                        Text("reviews-label")
+                            .font(.headline)
+                        if(reviewsMenu){
+                            Rectangle()
+                                .frame(maxHeight: 5)
+                                .foregroundStyle(ColorUtil.tabItemColor)
+                        } else {
+                            Rectangle()
+                                .frame(maxHeight: 5)
+                                .foregroundStyle(ColorUtil.transparentColor)
+                        }
+                        
+                    }
+                }
+                Spacer()
+                Button {
+                    aboutMenu = false
+                    reviewsMenu = false
+                    castMenu = true
+                } label: {
+                    VStack {
+                        Text("cast-label")
+                            .font(.headline)
+                        if(castMenu){
+                            Rectangle()
+                                .frame(maxHeight: 5)
+                                .foregroundStyle(ColorUtil.tabItemColor)
+                        } else {
+                            Rectangle()
+                                .frame(maxHeight: 5)
+                                .foregroundStyle(ColorUtil.transparentColor)
+                        }
+                        
+                    }
+                }
+            }.frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
+            
+            if aboutMenu {
+                Text("\(movie.overview)")
+                    .foregroundStyle(.white)
+            } else if reviewsMenu {
+                Text("building-label")
+                    .foregroundStyle(.white)
+            } else {
+                Text("building-label")
+                    .foregroundStyle(.white)
+            }
+        }
+        .padding()
+    }
 }
